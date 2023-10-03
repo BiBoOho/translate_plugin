@@ -130,6 +130,7 @@ jQuery.noConflict();
     let currentEngine;
     let langListForUes = langList.google_tran_api;
     let defalult_engine = $("input[name='engin']:checked").val();
+
     $(document).on('change', "input[name='engin']", function () {
       
       //check current engine
@@ -146,11 +147,9 @@ jQuery.noConflict();
           }
     });
 
-    function setLanguageEngineDefault(confirm,engineDefaults) {
-      let confirmVal = confirm;
-      console.log("🚀 ~ file: config.js:151 ~ setLanguageEngineDefault ~ confirmVal:", confirmVal)
+    function setLanguageEngineDefault(engineDefaults, index) {
+      let matghIndex = index;
       let engineDefault;
-      console.log(engineDefaults);
             if(engineDefaults == "google_tran_api"){
               engineDefault = langList.google_tran_api;
               langListForUes = langList.google_tran_api;
@@ -161,20 +160,25 @@ jQuery.noConflict();
             engineDefault = langList.my_memory_api;
             langListForUes = langList.my_memory_api;
           }
-          console.log(engineDefault);
-          console.log("langListForUes"+ langListForUes);
-          
-          console.log("🚀 ~ file: config.js:161 ~ setLanguageEngineDefault ~ engineDefault:", engineDefault.code3)
-      
+                
                 $("#table_lang tbody tr:eq("+0+")> td #country-selection > option").remove();
                 $("#table_lang tbody tr:eq("+0+")> td #country-selection").append(new Option('-----', '-----'));
-      
+  
                     //append new engine langueges list
                     for (let j = 0; j < engineDefault.length; j++){
                       let country = engineDefault[j].language;
                       $("#table_lang tbody tr:eq("+0+")> td #country-selection").append(new Option(country, country));
                     }
-              
+
+                if (matghIndex.length > 0) {
+                      for (let k = 0; k <= matghIndex.length; k++) {
+                        const element = matghIndex[k];
+                        for (let j = 0; j < engineDefault.length; j++){
+                          let country = engineDefault[j].language;
+                          $("#table_lang tbody tr:eq("+element+")> td #country-selection").append(new Option(country, country));
+                        }
+                      }
+                }
           }
 
     //when changing engine
@@ -182,6 +186,7 @@ jQuery.noConflict();
 
       let dataLength = engine.length;
       let languageNotMatch = [];
+      let languageMatch = [];
       let table = $("#table_lang tbody tr");
 
       //loop value to have from the language list 
@@ -193,6 +198,7 @@ jQuery.noConflict();
 
               // condition when tr match
               if(l >= 0){
+                languageMatch.push(i);
                   $("#table_lang tbody tr:eq("+i+")> td #country-selection > option").remove();
                   $("#table_lang tbody tr:eq("+i+")> td #country-selection").append(new Option('-----', '-----'));
 
@@ -217,7 +223,7 @@ jQuery.noConflict();
                          
               }else if(l < 0 && tr !== '-----') {
                 languageNotMatch.push(i);
-                }
+              }
             }
 
             //popup sweent alert when tr does not match
@@ -248,15 +254,15 @@ jQuery.noConflict();
                         'Deleted!',
                         'Your language has been deleted.',
                         'success'
-                      )
+                      );
 
                 }else if(result.isDismissed){
                   $("input[name='engin'][value="+defalult_engine+"]").prop("checked", true);
-                  console.log(defalult_engine);
-                  setLanguageEngineDefault("No",defalult_engine)
+                  setLanguageEngineDefault(defalult_engine, languageMatch)
                 }
-
               });
+            }else {
+              setCurrentEngine();
             }
 
     }
@@ -377,14 +383,14 @@ jQuery.noConflict();
       for (let i = 2; i <= lang_list_count; i++) {
         let trValCode = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #suffix_field_column").val();
         let trValLang = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #country-selection").val();
+        let btnLabel = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #button_label").val();
         let concatenatedOption = trValLang+'('+trValCode.toUpperCase()+')';
 
         if (!trValCode && !trValLang || trValLang == "-----") {
           continue;
         } else {
           $("#field-selection").append(new Option(concatenatedOption, trValCode));
-          $("#table_spaces > thead > tr").append(`<th class="kintoneplugin-table-th"><span class="title">${trValLang}</span></th>`);
-          // createSpaceSec(trVal);
+          $("#table_spaces > thead > tr").append(`<th class="kintoneplugin-table-th"><span class="title">${btnLabel}</span></th>`);
           $("#table_spaces > tbody > tr").append(`<td>
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
@@ -392,7 +398,6 @@ jQuery.noConflict();
                     <div class="kintoneplugin-select">
                       <select name="field_dropdown_column" id="select_field_translate" class="cf-column1">
                         <option value="">-----</option>
-                        <option value="SP_NAME">SP_NAME</option>
                       </select>
                     </div>
                   </div>
