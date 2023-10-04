@@ -284,10 +284,8 @@ jQuery.noConflict();
 
           let field_translate_length = [];
           $(`#table_spaces tbody tr:eq(${index})> td #select_field_translate`).each(function(i) {
-            if(i !== 0) {
-            let field_translate_obj = {iso : $(`#table_lang tbody tr:eq(${i})> td #code_iso`).val(), field: $(this).val()}
+            let field_translate_obj = {iso : $(`#table_lang tbody tr:eq(${i+1})> td #code_iso`).val(), field: $(this).val()}
             field_translate_length.push(field_translate_obj);
-          }
           });
           
           translate_fields.push({
@@ -311,6 +309,7 @@ jQuery.noConflict();
       // unread: JSON.stringify(unread),
       // readed: JSON.stringify(readed)
     };
+    // console.log(configuration);
     return configuration;
   }
 
