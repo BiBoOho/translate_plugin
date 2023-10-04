@@ -1,91 +1,23 @@
-// jQuery.noConflict();
-
-// (function($, PLUGIN_ID) {
-//   'use strict';
-
-//   var $form = $('.js-submit-settings');
-//   var $cancelButton = $('.js-cancel-button');
-//   var $message = $('.js-text-message');
-//   if (!($form.length > 0 && $cancelButton.length > 0 && $message.length > 0)) {
-//     throw new Error('Required elements do not exist.');
-//   }
-//   var config = kintone.plugin.app.getConfig(PLUGIN_ID);
-
-//   if (config.message) {
-//     $message.val(config.message);
-//   }
-//   $form.on('submit', function(e) {
-//     e.preventDefault();
-//     kintone.plugin.app.setConfig({message: $message.val()}, function() {
-//       alert('The plug-in settings have been saved. Please update the app!');
-//       window.location.href = '../../flow?app=' + kintone.app.getId();
-//     });
-//   });
-//   $cancelButton.on('click', function() {
-//     window.location.href = '../../' + kintone.app.getId() + '/plugin/';
-//   });
-// })(jQuery, kintone.$PLUGIN_ID);
-
-// config------------------------------------------------------------------
-// let config = {
-//   display_language:"en",
-//   language_list:[
-//       {
-//           language: "",
-//           lang_code: ""
-//       },
-//       {
-//           language: "",
-//           lang_code: ""
-//       },
-//       {
-//           language: "",
-//           lang_code: ""
-//       }
-//   ],
-//   item_group:[
-//       {
-//           item_code: "",
-//           space_element: "",
-//           lang_type:[
-//               "",
-//               "",
-//               ""
-//           ]
-//       },
-//       {
-//           item_code: "",
-//           space_element: "",
-//           lang_type:[
-//               "",
-//               "",
-//               ""
-//           ]
-//       }
-//   ],
-//   translate_direction:"from", // from || to
-//   translate_engine: {
-//       type: 'mymemories || google api || deep trans',
-//       url: 'https://api.mymemory.translated.net/get',
-//       token: '',
-//       apiKey: ''
-//   }
-// }
-// ----------------------------------------
 jQuery.noConflict();
 
 (function ($, Swal10, PLUGIN_ID) {
   "use strict";
 
   let langList = window.language_pack();
+  let confirmButton = $('#save');
+  let translate_url = $('#tran_url');
+  let header_1 = $('#header_1');
+  let header_2 = $('#header_2');
+  let header_3 = $('#header_3');
 
-  var configJSON = {};
+  // var configJSON = {};
   var config = kintone.plugin.app.getConfig(PLUGIN_ID);
-  var fieldList = [];
+  // var fieldList = [];
+
+  console.log(config);
 
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
-    console.log($("#table_lang tbody>tr"));
     if ($("#table_lang tbody>tr").length === 2) {
       $("#table_lang tbody>tr .removeList").eq(1).hide();
     } else {
@@ -95,7 +27,6 @@ jQuery.noConflict();
 
   // check row to hide remove row button if its has one row
   const checkRowSpace = () => {
-    console.log($("#table_spaces tbody>tr"));
     if ($("#table_spaces tbody>tr").length === 2) {
       $("#table_spaces tbody>tr .removeList_1").hide();
     } else {
@@ -103,33 +34,22 @@ jQuery.noConflict();
     }
   };
 
-  const createNewRowSpace = (type, row) => {
-    // select the table row to clone
-    var $rowToClone = $("#table_spaces tbody>tr:last");
-
-    // clone the row without its data
-    var $newRow = $rowToClone.clone(false);
-
-    // clone row after click row if add new row
-    if (type === "new") {
-      row.parent().parent().after($newRow);
-    }
-    // clone row if set from config data
-    if (type === "config") {
-      $rowToClone.after($newRow);
-    }
-    return;
-  };
-
   // create config to set plugin config and export to json file
   checkRowNumber();
   checkRowSpace();
+
   $(document).ready(function () {
 
     //events user chabge angine
     let currentEngine;
     let langListForUes = langList.google_tran_api;
     let defalult_engine = $("input[name='engin']:checked").val();
+    let tran_direction = $("input[name='tran_direction']:checked").val();
+
+    $(document).on('change', "input[name='tran_direction']", function () {
+      //check current translation direction
+      tran_direction = $("input[name='tran_direction']:checked").val();
+    });
 
     $(document).on('change', "input[name='engin']", function () {
       
@@ -147,6 +67,7 @@ jQuery.noConflict();
           }
     });
 
+    //set default language list when  user cancel change
     function setLanguageEngineDefault(engineDefaults, index) {
       let matghIndex = index;
       let engineDefault;
@@ -170,15 +91,20 @@ jQuery.noConflict();
                       $("#table_lang tbody tr:eq("+0+")> td #country-selection").append(new Option(country, country));
                     }
 
-                if (matghIndex.length > 0) {
-                      for (let k = 0; k <= matghIndex.length; k++) {
-                        const element = matghIndex[k];
-                        for (let j = 0; j < engineDefault.length; j++){
-                          let country = engineDefault[j].language;
-                          $("#table_lang tbody tr:eq("+element+")> td #country-selection").append(new Option(country, country));
-                        }
-                      }
-                }
+                    if (matghIndex.length >= 0) {
+                          for (let k = 0; k <= matghIndex.length; k++) {
+                            const element = matghIndex[k];
+                            let currentOptionSet = $("#table_lang tbody tr:eq("+element+")> td #country-selection option:selected").val();
+                            $("#table_lang tbody tr:eq("+element+")> td #country-selection > option").remove();
+                            $("#table_lang tbody tr:eq("+element+")> td #country-selection").append(new Option('-----', '-----'));
+
+                            for (let j = 0; j < engineDefault.length; j++){
+                              let country = engineDefault[j].language;
+                              $("#table_lang tbody tr:eq("+element+")> td #country-selection").append(new Option(country, country));
+                            }
+                            $("#table_lang tbody tr:eq("+element+")> td #country-selection").val(currentOptionSet).change();
+                          }
+                    }
           }
 
     //when changing engine
@@ -190,15 +116,15 @@ jQuery.noConflict();
       let table = $("#table_lang tbody tr");
 
       //loop value to have from the language list 
-          for(let i = 0; i < table.length; i++) {
-                let tr = $(`#table_lang tbody tr:eq(${i})> td #country-selection option:selected`).val();
-              //condition when tr does not match with engine language
-              let l;
-              for (l = dataLength - 1; l >= 0 && engine[l].language !== tr; l--);
+      for(let i = 0; i < table.length; i++) {
+            let tr = $(`#table_lang tbody tr:eq(${i})> td #country-selection option:selected`).val();
+            //condition when tr does not match with engine language
+            let l;
+            for (l = dataLength - 1; l >= 0 && engine[l].language !== tr; l--);
 
-              // condition when tr match
-              if(l >= 0){
-                languageMatch.push(i);
+            // condition when value match
+            if(l >= 0){
+                  languageMatch.push(i);
                   $("#table_lang tbody tr:eq("+i+")> td #country-selection > option").remove();
                   $("#table_lang tbody tr:eq("+i+")> td #country-selection").append(new Option('-----', '-----'));
 
@@ -210,17 +136,17 @@ jQuery.noConflict();
                       //set default value
                       $("#table_lang tbody tr:eq("+i+")> td #country-selection").val(engine[l].language).change();
 
-              // condition when tr does not match
-              } else if ( tr === '-----' || i === 0){
-                $("#table_lang tbody tr:eq("+i+")> td #country-selection > option").remove();
-                            $("#table_lang tbody tr:eq("+i+")> td #country-selection").append(new Option('-----', '-----'));
+            // condition when value = -----
+            } else if ( tr === '-----'){
+                          $("#table_lang tbody tr:eq("+i+")> td #country-selection > option").remove();
+                          $("#table_lang tbody tr:eq("+i+")> td #country-selection").append(new Option('-----', '-----'));
             
                               //append new engine langueges list
                               for (let j = 0; j < engine.length; j++){
                                 let country = engine[j].language;
                                 $("#table_lang tbody tr:eq("+i+")> td #country-selection").append(new Option(country, country));
                               }
-                         
+              // condition when value dose not match    
               }else if(l < 0 && tr !== '-----') {
                 languageNotMatch.push(i);
               }
@@ -321,6 +247,73 @@ jQuery.noConflict();
     return;
   }
 
+  // Create config to save in plugin config setting
+  const setConfig = () => {
+
+      let tran_direction_set = {
+        type: defalult_engine,
+        url: $(translate_url).val(),
+        headers: [
+          {
+            header: $(header_1).val(), 
+          },
+          {
+            header: $(header_2).val(),
+          },
+          {
+            header: $(header_3).val(),
+          }
+        ]
+      }
+
+      let lang_list_set = [];
+      $('#table_lang tr').each(function(index) {
+        if (index !== 0) {
+          lang_list_set.push({
+            language: $(`#table_lang tbody tr:eq(${index})> td #country-selection option:selected`).val(),
+            button_label: $(`#table_lang tbody tr:eq(${index})> td #button_label`).val(),
+            lang_code: $(`#table_lang tbody tr:eq(${index})> td #lang_code`).val(),
+            lang_iso: $(`#table_lang tbody tr:eq(${index})> td #code_iso`).val()
+          });
+        }
+      });
+
+      let translate_fields = [];
+      $('#table_spaces tbody tr').each(function(index) {
+        if (index !== 0) {
+
+          let field_translate_length = [];
+          $(`#table_spaces tbody tr:eq(${index})> td #select_field_translate`).each(function(i) {
+            if(i !== 0) {
+            let field_translate_obj = {iso : $(`#table_lang tbody tr:eq(${i})> td #code_iso`).val(), field: $(this).val()}
+            field_translate_length.push(field_translate_obj);
+          }
+          });
+          
+          translate_fields.push({
+            item_code: $(`#table_spaces tbody tr:eq(${index})> td #item_code`).val(),
+            space_element: $(`#table_spaces tbody tr:eq(${index})> td #select_field_space option:selected`).val(),
+            target_fields: field_translate_length
+          });
+
+        }
+      });
+
+
+    let configuration = {
+      translate_direction: tran_direction,
+      translate_engine:  JSON.stringify(tran_direction_set), 
+      language_list:  JSON.stringify(lang_list_set), 
+      default_language: $(`#default_lang option:selected`).val(),
+      translate_fields: JSON.stringify(translate_fields),
+      // display_items: JSON.stringify(display_items),
+      // reset_value: isResetChecked ? 'yes' : 'no',
+      // unread: JSON.stringify(unread),
+      // readed: JSON.stringify(readed)
+    };
+    return configuration;
+  }
+
   
 
     // add new row in table setting
@@ -356,7 +349,7 @@ jQuery.noConflict();
       if(currentVal == '-----') {
   
         let trLength = $(this).parents('tr').index() + 1;
-        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td:nth-child(3) #suffix_field_column').val('');
+        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td:nth-child(3) #code_iso').val('');
       } else {
         let countryList = langListForUes.filter(function(index) {
           return index.language === currentVal;
@@ -365,8 +358,8 @@ jQuery.noConflict();
         let setCode = countryList[0].code;
 
         let trLength = $(this).parents('tr').index() + 1;
-        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td #suffix_field_column').val(setCode3.toUpperCase());
-        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td #code_iso').val(setCode);
+        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td #code_iso').val(setCode3.toUpperCase());
+        $('#kintoneplugin-setting-tbody > tr:nth-child('+trLength+') > td #lang_code').val(setCode);
       }  
     });
     
@@ -375,13 +368,13 @@ jQuery.noConflict();
     $(document).on("click", ".reset-btn", function () {
       // clone the row without its data
       let lang_list_count = $("#kintoneplugin-setting-tbody > tr").length;
-      $("#field-selection > option").remove();
+      $("#default_lang > option").remove();
       $("#table_spaces > thead > tr > th:nth-child(n+3)").remove();
       $("#table_spaces > tbody > tr:nth-child(n+1) > td:nth-child(n+3)").remove();
-      $("#field-selection").append(new Option("-----", "-----"));
+      $("#default_lang").append(new Option("-----", "-----"));
 
       for (let i = 2; i <= lang_list_count; i++) {
-        let trValCode = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #suffix_field_column").val();
+        let trValCode = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #code_iso").val();
         let trValLang = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #country-selection").val();
         let btnLabel = $("#kintoneplugin-setting-tbody > tr:nth-child(" + i + ") #button_label").val();
         let concatenatedOption = trValLang+'('+trValCode.toUpperCase()+')';
@@ -389,7 +382,7 @@ jQuery.noConflict();
         if (!trValCode && !trValLang || trValLang == "-----") {
           continue;
         } else {
-          $("#field-selection").append(new Option(concatenatedOption, trValCode));
+          $("#default_lang").append(new Option(concatenatedOption, trValCode));
           $("#table_spaces > thead > tr").append(`<th class="kintoneplugin-table-th"><span class="title">${btnLabel}</span></th>`);
           $("#table_spaces > tbody > tr").append(`<td>
               <div class="kintoneplugin-table-td-control">
@@ -424,7 +417,6 @@ jQuery.noConflict();
       $(this).removeClass('dragging');
     });
     let element = document.getElementById('kintoneplugin-setting-tbody');
-    console.log(element);
     $('#kintoneplugin-setting-tbody').on('dragover', function (event) {
       event.preventDefault();
       $(this).addClass('dragover');
@@ -451,6 +443,19 @@ jQuery.noConflict();
     $('#kintoneplugin-setting-tbody > tr').on('dragend', function () {
       $(this).removeClass('dragging');
     });
+
+    confirmButton.on('click', function () {
+      let config = setConfig();
+      kintone.plugin.app.setConfig(config, function () {
+        Swal10.fire(
+          'Complete',          
+          'プラグインの設定が完了しました、アプリを更新してください！',
+          'success'
+        ).then(function () {
+          window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+        });
+      });
+    })
 
     setFieldSpace()
     setCurrentEngine();

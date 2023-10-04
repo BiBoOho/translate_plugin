@@ -1,29 +1,14 @@
 <section class="settings">
-  <!-- <h2 class="settings-heading">Settings for Sample Plug-in</h2>
-  <p class="kintoneplugin-desc">This message is displayed on the app page after the app has been updated.</p> -->
   <form class="js-submit-settings">
-    <!-- <div class="block">
-      <div class="kintoneplugin-title">Default Language</div> 
-      <div class="lang-content">
-        <div id="select-1" class="kintoneplugin-select-outer">
-          <div class="kintoneplugin-select">
-            <select id="field-selection">
-              <option value="-----">-----</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br> -->
 
     <div class="kintoneplugin-title">Translate direction <span class="kintoneplugin-require">*</span></div> 
     <div class="kintoneplugin-input-radio radio-box">
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="radio" value="0" id="radio-0" checked>
+        <input type="radio" name="tran_direction" value="from" id="radio-0" checked>
         <label for="radio-0">Translate from specified language</label>
       </span>
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="radio" value="1" id="radio-1">
+        <input type="radio" name="tran_direction" value="to" id="radio-1">
         <label for="radio-1">Translate to specified language</label>
       </span>
       </div>
@@ -61,7 +46,7 @@
                 <div class="kintoneplugin-table-td-control">
                   <div class="kintoneplugin-table-td-control-value">
                     <div class="kintoneplugin-input-outer engine-url">
-                      <input class="kintoneplugin-input-text" type="text">
+                      <input class="kintoneplugin-input-text"  id="tran_url" type="text">
                     </div>
                   </div>
                 </div>
@@ -71,7 +56,7 @@
                 <div class="kintoneplugin-table-td-control">
                   <div class="kintoneplugin-table-td-control-value">
                     <div class="kintoneplugin-input-outer engine-parameter">
-                      <input class="kintoneplugin-input-text" type="text">
+                      <input class="kintoneplugin-input-text" id="header_1" type="text">
                     </div>
                   </div>
                 </div>
@@ -81,7 +66,7 @@
                 <div class="kintoneplugin-table-td-control">
                   <div class="kintoneplugin-table-td-control-value">
                     <div class="kintoneplugin-input-outer engine-parameter">
-                      <input class="kintoneplugin-input-text" type="text">
+                      <input class="kintoneplugin-input-text" id="header_2" type="text">
                     </div>
                   </div>
                 </div>
@@ -91,7 +76,7 @@
                 <div class="kintoneplugin-table-td-control">
                   <div class="kintoneplugin-table-td-control-value">
                     <div class="kintoneplugin-input-outer engine-parameter">
-                      <input class="kintoneplugin-input-text" type="text">
+                      <input class="kintoneplugin-input-text" id="header_3" type="text">
                     </div>
                   </div>
                 </div>
@@ -134,7 +119,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column4" value="" id="suffix_field_column" disabled/>
+                    <input class="kintoneplugin-input-text cf-column4" value="" id="code_iso" disabled/>
                   </span>
                 </div>
               </div>
@@ -143,7 +128,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column4" value="" id="code_iso" disabled/>
+                    <input class="kintoneplugin-input-text cf-column4" value="" id="lang_code" disabled/>
                   </span>
                 </div>
               </div>
@@ -176,7 +161,7 @@
       <div class="lang-content">
         <div id="select-1" class="kintoneplugin-select-outer">
           <div class="kintoneplugin-select">
-            <select id="field-selection">
+            <select id="default_lang">
               <option value="-----">-----</option>
             </select>
           </div>
@@ -202,7 +187,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column3" value="" id="prefix_field_column"/>
+                    <input class="kintoneplugin-input-text cf-column3" value="" id="item_code"/>
                   </span>
                 </div>
               </div>
@@ -232,7 +217,7 @@
 
     <p id="button" class="kintoneplugin-row">
         <button type="button" class="js-cancel-button kintoneplugin-button-dialog-cancel">Cancel</button>
-        <button class="kintoneplugin-button-dialog-ok">Save</button>
+        <button type="button" class="kintoneplugin-button-dialog-ok" id="save">Save</button>
     </p>
   </form>
 </section>
