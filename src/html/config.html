@@ -4,28 +4,28 @@
     <div class="kintoneplugin-title">Translate direction <span class="kintoneplugin-require">*</span></div> 
     <div class="kintoneplugin-input-radio radio-box">
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="tran_direction" value="from" id="radio-0" checked>
-        <label for="radio-0">Translate from specified language</label>
+        <input type="radio" name="tran_direction" value="from" id="radio_from" checked>
+        <label for="radio_from">Translate from specified language</label>
       </span>
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="tran_direction" value="to" id="radio-1">
-        <label for="radio-1">Translate to specified language</label>
+        <input type="radio" name="tran_direction" value="to" id="radio_to">
+        <label for="radio_to">Translate to specified language</label>
       </span>
       </div>
 
     <div class="kintoneplugin-title">Translation engine <span class="kintoneplugin-require">*</span></div> 
     <div class="kintoneplugin-input-radio radio-box">
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="engin" value="google_tran_api" id="radio-2" checked>
-        <label for="radio-2">Google translate API</label>
+        <input type="radio" name="engin" value="google_tran_api" id="radio_google_translate" checked>
+        <label for="radio_Google_translate">Google translate API</label>
       </span>
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="engin" value="deepl_api" id="radio-3">
-        <label for="radio-3">Deepl API</label>
+        <input type="radio" name="engin" value="deepl_api" id="radio_deppl_translate">
+        <label for="radio_deppl_translate">DeepL API</label>
       </span>
       <span class="kintoneplugin-input-radio-item">
-        <input type="radio" name="engin" value="my_memory_api" id="radio-4">
-        <label for="radio-4">My Memory API</label>
+        <input type="radio" name="engin" value="my_memory_api" id="radio_memory_traslate">
+        <label for="radio_memory_traslate">My Memory API</label>
       </span>
       </div>
 
@@ -107,7 +107,7 @@
                 <div class="kintoneplugin-table-td-control-value">
                   <div class="kintoneplugin-select-outer">
                     <div class="kintoneplugin-select">
-                      <select id="country-selection">
+                      <select id="country-selection" name="country-selection">
                         <option value="-----">-----</option>
                       </select>
                     </div>
@@ -119,7 +119,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column4" value="" id="code_iso" disabled/>
+                    <input class="kintoneplugin-input-text" value="" id="code_iso" disabled/>
                   </span>
                 </div>
               </div>
@@ -128,7 +128,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column4" value="" id="lang_code" disabled/>
+                    <input class="kintoneplugin-input-text" value="" id="lang_code" disabled/>
                   </span>
                 </div>
               </div>
@@ -137,7 +137,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column4" value="" id="button_label" />
+                    <input class="kintoneplugin-input-text" value="" id="button_label" />
                   </span>
                 </div>
               </div>
@@ -187,7 +187,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text cf-column3" value="" id="item_code"/>
+                    <input class="kintoneplugin-input-text" value="" id="item_code" type="text"/>
                   </span>
                 </div>
               </div>
