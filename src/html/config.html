@@ -17,7 +17,7 @@
     <div class="kintoneplugin-input-radio radio-box">
       <span class="kintoneplugin-input-radio-item">
         <input type="radio" name="engin" value="google_tran_api" id="radio_google_translate" checked>
-        <label for="radio_Google_translate">Google translate API</label>
+        <label for="radio_google_translate">Google translate API</label>
       </span>
       <span class="kintoneplugin-input-radio-item">
         <input type="radio" name="engin" value="deepl_api" id="radio_deppl_translate">
@@ -107,7 +107,7 @@
                 <div class="kintoneplugin-table-td-control-value">
                   <div class="kintoneplugin-select-outer">
                     <div class="kintoneplugin-select">
-                      <select id="country-selection" name="country-selection">
+                      <select name="country-selection">
                         <option value="-----">-----</option>
                       </select>
                     </div>
@@ -119,7 +119,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text" value="" id="code_iso" disabled/>
+                    <input class="kintoneplugin-input-text" name="code_iso" value="" disabled/>
                   </span>
                 </div>
               </div>
@@ -128,7 +128,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text" value="" id="lang_code" disabled/>
+                    <input class="kintoneplugin-input-text" name="lang_code" value="" disabled/>
                   </span>
                 </div>
               </div>
@@ -137,12 +137,12 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text" value="" id="button_label" />
+                    <input class="kintoneplugin-input-text" name="button_label" value="" />
                   </span>
                 </div>
               </div>
             </td>
-            <td class="kintoneplugin-table-td-operation cf-operation-column">
+            <td class="kintoneplugin-table-td-operation">
               <button type="button" class="kintoneplugin-button-add-row-image addList" id="addList" title="Add row"></button>
               <button type="button" class="kintoneplugin-button-remove-row-image removeList" title="Delete this row"></button>
             </td>
@@ -161,7 +161,7 @@
       <div class="lang-content">
         <div id="select-1" class="kintoneplugin-select-outer">
           <div class="kintoneplugin-select">
-            <select id="default_lang">
+            <select name="default_lang">
               <option value="-----">-----</option>
             </select>
           </div>
@@ -187,7 +187,7 @@
               <div class="kintoneplugin-table-td-control">
                 <div class="kintoneplugin-table-td-control-value">
                   <span>
-                    <input class="kintoneplugin-input-text" value="" id="item_code" type="text"/>
+                    <input class="kintoneplugin-input-text" name="item_code" type="text"/>
                   </span>
                 </div>
               </div>
@@ -197,7 +197,7 @@
                 <div class="kintoneplugin-table-td-control-value">
                   <div class="kintoneplugin-input-outer">
                     <div class="kintoneplugin-select">
-                      <select name="field_dropdown_column" id="select_field_space" class="cf-column1">
+                      <select name="select_field_space">
                         <option value="">-----</option>
                       </select>
                     </div>
@@ -206,7 +206,7 @@
               </div>
             </td>
            
-            <td style="display: flex;" class="kintoneplugin-table-td-operation cf-operation-column">
+            <td style="display: flex;" class="kintoneplugin-table-td-operation">
               <button type="button" class="kintoneplugin-button-add-row-image addList_1" title="Add row"></button>
               <button type="button" class="kintoneplugin-button-remove-row-image removeList_1" title="Delete this row"></button>
             </td>
