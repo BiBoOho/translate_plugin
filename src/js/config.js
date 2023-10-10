@@ -10,7 +10,8 @@ jQuery.noConflict();
   let header_2 = $('#header_2');
   let header_3 = $('#header_3');
 
-  let config = kintone.plugin.app.getConfig(PLUGIN_ID);
+  let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
+  console.log("🚀 ~ file: config.js:14 ~ CONF:", CONF)
 
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
@@ -60,8 +61,6 @@ jQuery.noConflict();
         languageListForUse = [];
       }
 
-      console.log(languageListForUse);
-      
       createLanguageSelectionList(languageListForUse);
     }
 
@@ -75,6 +74,7 @@ jQuery.noConflict();
       let languageNotMatch = [];
       let languageMatch = [];
       let table = $("#table_lang tbody tr");
+      let previous_value;
 
       //loop value to have from the language list 
       for(let i = 0; i < table.length; i++) {
@@ -86,56 +86,45 @@ jQuery.noConflict();
             // condition when value match
             if(l >= 0 || tr === '-----'){
                   languageMatch.push(i);
-            // condition when value = -----
+                  previous_value = $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection'] option:selected").val()
              
               // condition when value dose not match    
               }else if(l < 0 && tr !== '-----') {
-                languageNotMatch.push(i);
+                  languageNotMatch.push(i);
+                  previous_value = "-----";
               }
+
+              $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection'] > option").remove();
+              $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option('-----', '-----'));
+
+                  //append new engine langueges list
+                  for (let j = 0; j < engine.length; j++){
+                    let country = engine[j].language;
+                    $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option(country, country));
+                  }
+                  //set default value
+                  $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").val(previous_value).change();
             }
 
-             //popup sweent alert when tr does not match
+            //set border red for 
             if (languageNotMatch.length > 0) {
-
-              languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
-
-              for (let index = 0; index < languageNotMatch.length; index++) {
-                    const element = languageNotMatch[index];
-                    $("#table_lang tbody tr select[name='country-selection']").eq(element).parent().css("border", "1px solid red");
-                  }
-                  $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
-            }else if(languageMatch.length > 0){
+                    languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
               
-                  let tbRow = languageMatch;
-                  for (let i = 0; i < languageMatch.length; i++){
-                        tbRow = languageMatch[i];
-                        let previous_value = $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] option:selected").val()
-                        console.log("🚀 ~ file: config.js:178 ~ createLanguageSelectionList ~ previous_value:", previous_value)
-                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] > option").remove();
-                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-
-                            //append new engine langueges list
-                            for (let j = 0; j < engine.length; j++){
-                              let country = engine[j].language;
-                              $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option(country, country));
-                            }
-                            //set default value
-                            $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").val(previous_value).change();
-                  }
-                  // setCurrentEngine()
-                  // previous_engine = $("input[name='engine']:checked").val();
-                }
+                    for (let index = 0; index < languageNotMatch.length; index++) {
+                          const element = languageNotMatch[index];
+                          $("#table_lang tbody tr select[name='country-selection']").eq(element).parent().addClass("set-border");
+                        }
+            }
     }
 
 
-      $("#table_lang tbody tr select[name='country-selection']").change(function(){
-          $(this).parent().css("border", "1px solid #e3e7e8");
-      });
+    $("#table_lang tbody tr select[name='country-selection']").change(function(){
+        $(this).parent().removeClass("set-border");
+    });
 
-    //
+    //set default when not have config value
     function setDefaultfunction() {
-      let checkConfig = 0;
-      if (checkConfig == 0) {
+      if (CONF) {
         for (let k = 0; k < languageListForUse.length; k++){
             let country = languageListForUse[k].language;
             $("select[name='country-selection']").append(new Option(country, country));
@@ -164,37 +153,42 @@ jQuery.noConflict();
     return;
   }
 
+  // set dropdown to select SINGLE_LINE_TEXT, RICH_TEXT, SUBTABLE, MULTI_LINE_TEXT field  
   async function setFieldList() {
 
     const param = { app: kintone.app.getId() };
-    const field = await kintone.api('/k/v1/preview/app/form/layout', 'GET', param);
-    let fields_code = [];
-      field.layout.forEach((item) => {
-        item.fields.forEach((item2) => {
-          if(item2.type === 'SINGLE_LINE_TEXT' || item2.type === 'RICH_TEXT'){
-            fields_code.push(item2.code); 
+    const field = await kintone.api('/k/v1/preview/form', 'GET', param);
+    let fields_title = [];
+    let concatenateName
+      field.properties.forEach((item) => {
+          if(item.type === 'SINGLE_LINE_TEXT' || item.type === 'RICH_TEXT' || item.type === 'MULTI_LINE_TEXT'){
+            concatenateName = {key : item.code , value : item.label + ' (' + item.code + ')'}
+            fields_title.push(concatenateName);
+          }else if(item.type === 'SUBTABLE') {
+            item.fields.forEach((item2) => {
+            concatenateName = {key : item.code , value : item2.label + ' (' + item.code + ')'}
+              fields_title.push(concatenateName);
+            });
           }
         });
-      });
 
-      console.log(fields_code.sort());
-      let fields_sort = fields_code.sort();
+      let fields_sort = fields_title.sort((a, b) => a.value.localeCompare(b.value));
       for(let k = 0; k < $('#table_spaces tbody tr').length; k++){
-        fields_sort
         $.each(fields_sort, function(index, value) {
           // Perform actions on each element
-          $(`#table_spaces tbody tr:eq(${k}) select[name='select_field_translate']`).append(new Option(value, value));
+          let key = value.key;
+          let title = value.value;
+          $(`#table_spaces tbody tr:eq(${k}) select[name='select_field_translate']`).append(new Option(title, key));
         });
-        
       }
-    return;
+
   }
 
   // Create config to save in plugin config setting
   const setConfig = () => {
 
       let tran_direction_set = {
-        type: previous_engine,
+        type: currentEngine,
         url: $(translate_url).val(),
         headers: [
           {
@@ -446,13 +440,14 @@ jQuery.noConflict();
       //validate when have the same Item
       // Select all input elements of type text within the table
       let textInputs = $('#table_spaces').find('input[type="text"]');
+      let selectVal = $('#table_spaces').find('select[name="select_field_translate"]');
       let space_length = $(`#table_spaces tbody tr`).length;
 
       for (let k = 1; k < space_length; k++) {
         const space_index = k;
         textInputs.slice(1).each(function(index) {
           let index_check = k - 1;
-          var inputValue = $(this).val();
+          let inputValue = $(this).val();
           
           // Do something with the input value
           if (index_check != index && inputValue == $(`#table_spaces tbody tr:eq(${space_index})> td input[type="text"]`).val()) {
@@ -464,21 +459,51 @@ jQuery.noConflict();
             return false;
           }
         });
+
+        $(`#table_spaces > tbody > tr:eq(${space_index}) > td select[name='select_field_translate'] option:selected`).each(function(index) {
+          let value = $(this).val();
+          let SubtableCheck = '';
+          let header = {
+            'app': kintone.app.getId()
+          }
+      
+          kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, async function (resp) {
+            let data = resp.properties;
+            
+            for (let index = 0; index < data.length; index++) {
+              const checkValname = data[index];
+              if (value == checkValname.code) {
+                if (checkValname.type === 'SUBTABLE') {
+                  SubtableCheck += 1;
+                  console.log("🚀 ~ file: config.js:478 ~ SubtableCheck:", SubtableCheck)
+                }
+              }
+            }
+
+            // console.log(SubtableCheck);
+
+          });
+        });
       }
 
+      console.log($(`#table_spaces > tbody > tr:eq(${1}) > td select[name='select_field_translate'] option:selected`).length);
+
+      // console.log($("#table_spaces > tbody > tr:eq(1) > td:eq(2) select[name='select_field_translate'] option:selected").val());
+
+
       // Loop through the selected inputs
-      if (!checkList) {
-        let config = setConfig();
-            kintone.plugin.app.setConfig(config, function () {
-              Swal10.fire(
-                'Complete',          
-                'プラグインの設定が完了しました、アプリを更新してください！',
-                'success'
-              ).then(function () {
-                window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
-              });
-            });
-      }
+      // if (!checkList) {
+      //   let config = setConfig();
+      //       kintone.plugin.app.setConfig(config, function () {
+      //         Swal10.fire(
+      //           'Complete',          
+      //           'プラグインの設定が完了しました、アプリを更新してください！',
+      //           'success'
+      //         ).then(function () {
+      //           window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+      //         });
+      //       });
+      // }
 
     });
 
