@@ -10,9 +10,7 @@ jQuery.noConflict();
   let header_2 = $('#header_2');
   let header_3 = $('#header_3');
 
-  var config = kintone.plugin.app.getConfig(PLUGIN_ID);
-
-  console.log(config);
+  let config = kintone.plugin.app.getConfig(PLUGIN_ID);
 
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
@@ -49,10 +47,9 @@ jQuery.noConflict();
       tran_direction = $("input[name='tran_direction']:checked").val();
     });
 
-    function checkEngine(e){
+    function checkEngine(){
       //check current engine
       currentEngine = $("input[name='engine']:checked").val();
-      console.log("🚀 ~ file: config.js:55 ~ checkEngine ~ currentEngine:", currentEngine)
       if (currentEngine == "google_tran_api") {
         languageListForUse = langList.google_tran_api;
       } else if (currentEngine == "deepl_api") {
@@ -62,13 +59,16 @@ jQuery.noConflict();
       } else {
         languageListForUse = [];
       }
+
+      console.log(languageListForUse);
       
       createLanguageSelectionList(languageListForUse);
     }
 
+    //when changing engine
     $(document).on('change', "input[name='engine']", checkEngine);
 
-    //when changing engine
+    //check engine are match or not match
     function createLanguageSelectionList(engine) {
 
       let dataLength = engine.length;
@@ -94,72 +94,43 @@ jQuery.noConflict();
               }
             }
 
-            //popup sweent alert when tr does not match
+             //popup sweent alert when tr does not match
             if (languageNotMatch.length > 0) {
-                  Swal10.fire({
-                    title: 'Are you sure?',
-                    text: "Have "+languageNotMatch.length+" language not match",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-              }).then((result) => {
-                if (result.isConfirmed) {
-                      setCurrentEngine();
-                      languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
 
-                      for (let index = 0; index < languageNotMatch.length; index++) {
-                        const element = languageNotMatch[index];
-                        $("#table_lang tbody tr").eq(element).remove();
-                      }
+              languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
 
-                      if($("#table_lang tbody tr").length == 1) {
-                        $("#kintoneplugin-setting-tbody > tr").eq(0).clone(true).insertAfter($("#kintoneplugin-setting-tbody > tr")).eq(0);
-                      }
-
-                      Swal10.fire(
-                        'Deleted!',
-                        'Your language has been deleted.',
-                        'success'
-                      );
-
-                }else if(result.isDismissed){
+              for (let index = 0; index < languageNotMatch.length; index++) {
+                    const element = languageNotMatch[index];
+                    $("#table_lang tbody tr select[name='country-selection']").eq(element).parent().css("border", "1px solid red");
+                  }
                   $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
-                  return;
-                }
-              });
-            }else if (languageMatch.length > 0) {
-                let tbRow = languageMatch;
-              for (let i = 0; i < languageMatch.length; i++){
-                    tbRow = languageMatch[i];
-                    let previous_value = $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] option:selected").val()
-                    console.log("🚀 ~ file: config.js:178 ~ createLanguageSelectionList ~ previous_value:", previous_value)
-                    $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] > option").remove();
-                    $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-
-                        //append new engine langueges list
-                        for (let j = 0; j < engine.length; j++){
-                          let country = engine[j].language;
-                          $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option(country, country));
-                        }
-                        //set default value
-                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").val(previous_value).change();
-              }
-
+            }else if(languageMatch.length > 0){
               
-            
-            }else {
-              setCurrentEngine();
-            }
+                  let tbRow = languageMatch;
+                  for (let i = 0; i < languageMatch.length; i++){
+                        tbRow = languageMatch[i];
+                        let previous_value = $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] option:selected").val()
+                        console.log("🚀 ~ file: config.js:178 ~ createLanguageSelectionList ~ previous_value:", previous_value)
+                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] > option").remove();
+                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option('-----', '-----'));
 
+                            //append new engine langueges list
+                            for (let j = 0; j < engine.length; j++){
+                              let country = engine[j].language;
+                              $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option(country, country));
+                            }
+                            //set default value
+                            $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").val(previous_value).change();
+                  }
+                  // setCurrentEngine()
+                  // previous_engine = $("input[name='engine']:checked").val();
+                }
     }
 
-    // update value of engine
-    function setCurrentEngine() {
-      previous_engine = $("input[name='engine']:checked").val();
-      // console.log("🚀 ~ file: config.js:163 ~ setCurrentEngine ~ previous_engine:", previous_engine)
-    }
+
+      $("#table_lang tbody tr select[name='country-selection']").change(function(){
+          $(this).parent().css("border", "1px solid #e3e7e8");
+      });
 
     //
     function setDefaultfunction() {
@@ -212,13 +183,10 @@ jQuery.noConflict();
         fields_sort
         $.each(fields_sort, function(index, value) {
           // Perform actions on each element
-          console.log("Element " + index + ": " + value);
           $(`#table_spaces tbody tr:eq(${k}) select[name='select_field_translate']`).append(new Option(value, value));
         });
         
       }
-
-
     return;
   }
 
@@ -248,7 +216,7 @@ jQuery.noConflict();
             language: $(`#table_lang tbody tr:eq(${index})> td select[name='country-selection'] option:selected`).val(),
             button_label: $(`#table_lang tbody tr:eq(${index})> td input[name='button_label']`).val(),
             lang_code: $(`#table_lang tbody tr:eq(${index})> td input[name='lang_code']`).val(),
-            lang_iso: $(`#table_lang tbody tr:eq(${index})> td input[name='code_iso']`).val()
+            iso: $(`#table_lang tbody tr:eq(${index})> td input[name='code_iso']`).val()
           });
         }
       });
@@ -498,8 +466,6 @@ jQuery.noConflict();
         });
       }
 
-
-
       // Loop through the selected inputs
       if (!checkList) {
         let config = setConfig();
@@ -517,7 +483,6 @@ jQuery.noConflict();
     });
 
     setFieldSpace()
-    setCurrentEngine();
   });
 
 })(jQuery, Sweetalert2_10.noConflict(true), kintone.$PLUGIN_ID);
