@@ -40,8 +40,8 @@ jQuery.noConflict();
 
     //events user chabge angine
     let currentEngine;
-    let langListForUes = langList.google_tran_api;
-    let defalult_engine = $("input[name='engin']:checked").val();
+    let languageListForUse = langList.google_tran_api;
+    let previous_engine = $("input[name='engine']:checked").val();
     let tran_direction = $("input[name='tran_direction']:checked").val();
 
     $(document).on('change', "input[name='tran_direction']", function () {
@@ -49,64 +49,27 @@ jQuery.noConflict();
       tran_direction = $("input[name='tran_direction']:checked").val();
     });
 
-    $(document).on('change', "input[name='engin']", function () {
-      
+    function checkEngine(e){
       //check current engine
-        currentEngine = $("input[name='engin']:checked").val();
-          if(currentEngine == "google_tran_api"){
-              langListForUes = langList.google_tran_api;
-              whenChangeEngine(langListForUes);
-          } else if(currentEngine == "deepl_api"){
-              langListForUes = langList.deepl_api;
-              whenChangeEngine(langListForUes);
-          }else if(currentEngine == "my_memory_api"){
-              langListForUes = langList.my_memory_api;
-              whenChangeEngine(langListForUes);
-          }
-    });
+      currentEngine = $("input[name='engine']:checked").val();
+      console.log("🚀 ~ file: config.js:55 ~ checkEngine ~ currentEngine:", currentEngine)
+      if (currentEngine == "google_tran_api") {
+        languageListForUse = langList.google_tran_api;
+      } else if (currentEngine == "deepl_api") {
+        languageListForUse = langList.deepl_api;
+      } else if (currentEngine == "my_memory_api") {
+        languageListForUse = langList.my_memory_api;
+      } else {
+        languageListForUse = [];
+      }
+      
+      createLanguageSelectionList(languageListForUse);
+    }
 
-    //set default language list when  user cancel change
-    function setLanguageEngineDefault(engineDefaults, index) {
-      let matghIndex = index;
-      let engineDefault;
-            if(engineDefaults == "google_tran_api"){
-              engineDefault = langList.google_tran_api;
-              langListForUes = langList.google_tran_api;
-          } else if(engineDefaults == "deepl_api"){
-            engineDefault = langList.deepl_api;
-            langListForUes = langList.deepl_api;
-          }else if(engineDefaults == "my_memory_api"){
-            engineDefault = langList.my_memory_api;
-            langListForUes = langList.my_memory_api;
-          }
-                
-                $("#table_lang tbody tr:eq("+0+")> td select[name='country-selection'] > option").remove();
-                $("#table_lang tbody tr:eq("+0+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-  
-                    //append new engine langueges list
-                    for (let j = 0; j < engineDefault.length; j++){
-                      let country = engineDefault[j].language;
-                      $("#table_lang tbody tr:eq("+0+")> td select[name='country-selection']").append(new Option(country, country));
-                    }
-
-                    if (matghIndex.length >= 0) {
-                          for (let k = 0; k <= matghIndex.length; k++) {
-                            const element = matghIndex[k];
-                            let currentOptionSet = $("#table_lang tbody tr:eq("+element+")> td select[name='country-selection'] option:selected").val();
-                            $("#table_lang tbody tr:eq("+element+")> td select[name='country-selection'] > option").remove();
-                            $("#table_lang tbody tr:eq("+element+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-
-                            for (let j = 0; j < engineDefault.length; j++){
-                              let country = engineDefault[j].language;
-                              $("#table_lang tbody tr:eq("+element+")> td select[name='country-selection']").append(new Option(country, country));
-                            }
-                            $("#table_lang tbody tr:eq("+element+")> td select[name='country-selection']").val(currentOptionSet).change();
-                          }
-                    }
-          }
+    $(document).on('change', "input[name='engine']", checkEngine);
 
     //when changing engine
-    function whenChangeEngine(engine) {
+    function createLanguageSelectionList(engine) {
 
       let dataLength = engine.length;
       let languageNotMatch = [];
@@ -121,30 +84,10 @@ jQuery.noConflict();
             for (l = dataLength - 1; l >= 0 && engine[l].language !== tr; l--);
 
             // condition when value match
-            if(l >= 0){
+            if(l >= 0 || tr === '-----'){
                   languageMatch.push(i);
-                  $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection'] > option").remove();
-                  $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-
-                      //append new engine langueges list
-                      for (let j = 0; j < engine.length; j++){
-                        let country = engine[j].language;
-                        $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option(country, country));
-                      }
-                      //set default value
-                      $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").val(engine[l].language).change();
-
             // condition when value = -----
-            } else if ( tr === '-----'){
-                          languageMatch.push(i);
-                          $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection'] > option").remove();
-                          $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option('-----', '-----'));
-            
-                              //append new engine langueges list
-                              for (let j = 0; j < engine.length; j++){
-                                let country = engine[j].language;
-                                $("#table_lang tbody tr:eq("+i+")> td select[name='country-selection']").append(new Option(country, country));
-                              }
+             
               // condition when value dose not match    
               }else if(l < 0 && tr !== '-----') {
                 languageNotMatch.push(i);
@@ -182,27 +125,48 @@ jQuery.noConflict();
                       );
 
                 }else if(result.isDismissed){
-                  $("input[name='engin'][value="+defalult_engine+"]").prop("checked", true);
-                  setLanguageEngineDefault(defalult_engine, languageMatch)
+                  $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
+                  return;
                 }
               });
+            }else if (languageMatch.length > 0) {
+                let tbRow = languageMatch;
+              for (let i = 0; i < languageMatch.length; i++){
+                    tbRow = languageMatch[i];
+                    let previous_value = $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] option:selected").val()
+                    console.log("🚀 ~ file: config.js:178 ~ createLanguageSelectionList ~ previous_value:", previous_value)
+                    $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection'] > option").remove();
+                    $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option('-----', '-----'));
+
+                        //append new engine langueges list
+                        for (let j = 0; j < engine.length; j++){
+                          let country = engine[j].language;
+                          $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").append(new Option(country, country));
+                        }
+                        //set default value
+                        $("#table_lang tbody tr:eq("+tbRow+")> td select[name='country-selection']").val(previous_value).change();
+              }
+
+              
+            
             }else {
               setCurrentEngine();
             }
 
     }
 
-    //update value of engine
+    // update value of engine
     function setCurrentEngine() {
-      defalult_engine = $("input[name='engin']:checked").val();
+      previous_engine = $("input[name='engine']:checked").val();
+      // console.log("🚀 ~ file: config.js:163 ~ setCurrentEngine ~ previous_engine:", previous_engine)
     }
 
     //
     function setDefaultfunction() {
       let checkConfig = 0;
       if (checkConfig == 0) {
-        for (let k = 0; k < langListForUes.length; k++){
-            let country = langListForUes[k].language;
+        for (let k = 0; k < languageListForUse.length; k++){
+            let country = languageListForUse[k].language;
             $("select[name='country-selection']").append(new Option(country, country));
         }
 
@@ -238,9 +202,6 @@ jQuery.noConflict();
         item.fields.forEach((item2) => {
           if(item2.type === 'SINGLE_LINE_TEXT' || item2.type === 'RICH_TEXT'){
             fields_code.push(item2.code); 
-            // for(let k = 0; k < $('#table_spaces tbody tr').length; k++){
-            //   $(`#table_spaces tbody tr:eq(${k}) select[name='select_field_translate']`).append(new Option(item2.code, item2.code));
-            // }
           }
         });
       });
@@ -265,7 +226,7 @@ jQuery.noConflict();
   const setConfig = () => {
 
       let tran_direction_set = {
-        type: defalult_engine,
+        type: previous_engine,
         url: $(translate_url).val(),
         headers: [
           {
@@ -356,7 +317,7 @@ jQuery.noConflict();
         let trLength = $(this).parents('tr').index() + 1;
         $(`#kintoneplugin-setting-tbody > tr:nth-child(${trLength}) > td:nth-child(3) input[name='code_iso']`).val('');
       } else {
-        let countryList = langListForUes.filter(function(index) {
+        let countryList = languageListForUse.filter(function(index) {
           return index.language === currentVal;
         });
         let setCode3 = countryList[0].code3;
