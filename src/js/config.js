@@ -40,7 +40,7 @@ jQuery.noConflict();
     //events user chabge angine
     let currentEngine;
     let languageListForUse = langList.google_tran_api;
-    let previous_engine = $("input[name='engine']:checked").val();
+    // let previous_engine = $("input[name='engine']:checked").val();
     let tran_direction = $("input[name='tran_direction']:checked").val();
 
     $(document).on('change', "input[name='tran_direction']", function () {
@@ -445,6 +445,7 @@ jQuery.noConflict();
 
       for (let k = 1; k < space_length; k++) {
         const space_index = k;
+        let check_item = false;
         textInputs.slice(1).each(function(index) {
           let index_check = k - 1;
           let inputValue = $(this).val();
@@ -456,37 +457,63 @@ jQuery.noConflict();
               title: 'Oops...',
               html: `Have the same Item "${$(`#table_spaces tbody tr:eq(${space_index})> td input[type="text"]`).val()}" !!`,
             });
+            check_item = true;
             return false;
           }
         });
 
-        $(`#table_spaces > tbody > tr:eq(${space_index}) > td select[name='select_field_translate'] option:selected`).each(function(index) {
-          let value = $(this).val();
-          let SubtableCheck = '';
-          let header = {
-            'app': kintone.app.getId()
-          }
-      
-          kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, async function (resp) {
-            let data = resp.properties;
-            
-            for (let index = 0; index < data.length; index++) {
-              const checkValname = data[index];
-              if (value == checkValname.code) {
-                if (checkValname.type === 'SUBTABLE') {
-                  SubtableCheck += 1;
-                  console.log("🚀 ~ file: config.js:478 ~ SubtableCheck:", SubtableCheck)
+        if (!check_item) {
+
+          let loopBreak = false;
+          $(`#table_spaces > tbody > tr:eq(${space_index}) > td select[name='select_field_translate'] option:selected`).each(async function() {
+            if(loopBreak) return
+            let value = $(this).val();
+            let subTableCheck = [];
+            let notSubTableCheck = [];
+            let header = {
+              'app': kintone.app.getId()
+            }
+            console.log('\table')
+            // console.log(getPrevireForm(header))
+            kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, function (resp) {
+              let data = resp.properties;
+              
+              for (let index = 0; index < data.length; index++) {
+                const checkValname = data[index];
+                if (value == checkValname.code) {
+                  if(checkValname.type !== 'SUBTABLE') {
+                    notSubTableCheck.push(checkValname);
+                  }
+                  if (checkValname.type === 'SUBTABLE') {
+                    subTableCheck.push(checkValname);
+                  }
+                }
+                if (subTableCheck.length >= 0 && subTableCheck.length < notSubTableCheck.length) {
+                  loopBreak = true;
+                  console.log('\breakkkk')
+                  return Swal10.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: `subtable to select not match!!`,
+                  });
                 }
               }
-            }
-
-            // console.log(SubtableCheck);
-
+            });
+            
           });
-        });
+          
+        }
+
+        function getPrevireForm(header){
+          kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, function (resp) {
+            console.log(resp.properties)
+            return resp.properties;
+          });
+        }
+
       }
 
-      console.log($(`#table_spaces > tbody > tr:eq(${1}) > td select[name='select_field_translate'] option:selected`).length);
+      // console.log($(`#table_spaces > tbody > tr:eq(${1}) > td select[name='select_field_translate'] option:selected`).length);
 
       // console.log($("#table_spaces > tbody > tr:eq(1) > td:eq(2) select[name='select_field_translate'] option:selected").val());
 
@@ -507,7 +534,7 @@ jQuery.noConflict();
 
     });
 
-    setFieldSpace()
+    setFieldSpace();
   });
 
 })(jQuery, Sweetalert2_10.noConflict(true), kintone.$PLUGIN_ID);
