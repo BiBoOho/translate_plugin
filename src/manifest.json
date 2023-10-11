@@ -17,6 +17,7 @@
   "config": {
     "html": "html/config.html",
     "js": [
+      "js/axios.min.js",
       "js/jquery-2.2.4.min.js",
       "js/sweetalert2.all.js",
       "language_pack/language_pack.js",
