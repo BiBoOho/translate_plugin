@@ -11,7 +11,6 @@ jQuery.noConflict();
   let header_3 = $('#header_3');
 
   let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
-  console.log("🚀 ~ file: config.js:14 ~ CONF:", CONF)
 
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
@@ -82,7 +81,6 @@ jQuery.noConflict();
             //condition when tr does not match with engine language
             let l;
             for (l = dataLength - 1; l >= 0 && engine[l].language !== tr; l--);
-            console.log(l);
             // condition when value match
             if(l >= 0 || tr === '-----'){
                   languageMatch.push(i);
@@ -124,7 +122,7 @@ jQuery.noConflict();
 
     //set default when not have config value
     function setDefaultfunction() {
-      if (CONF) {
+      if (!CONF) {
         for (let k = 0; k < languageListForUse.length; k++){
             let country = languageListForUse[k].language;
             $("select[name='country-selection']").append(new Option(country, country));
@@ -166,7 +164,7 @@ jQuery.noConflict();
             fields_title.push(concatenateName);
           }else if(item.type === 'SUBTABLE') {
             item.fields.forEach((item2) => {
-            concatenateName = {key : item.code , value : item.label + ' (' + item.code + ',' + item2.code +')'}
+            concatenateName = {key : item2.code , value : item.label + ' (' + item.code + ',' + item2.code +')'}
               fields_title.push(concatenateName);
             });
           }
@@ -188,7 +186,6 @@ jQuery.noConflict();
   $(document).on("change", "#table_spaces tbody tr > td select[name='select_field_translate']", function () {
     let thisElementRow = $(this);
     let selectedRowIndex = $(this).parents("tr").index();
-    console.log("🚀 ~ file: config.js:191 ~ selectedRowIndex:", selectedRowIndex)
 
     let header = {
       'app': kintone.app.getId()
@@ -204,13 +201,16 @@ jQuery.noConflict();
 
           for (let index = 0; index < data.length; index++) {
             const checkValCode = data[index];
-            if (thisOptionValue == checkValCode.code) {
-              if(checkValCode.type !== 'SUBTABLE') {
-                notSubTableRowCheck = true;
-              }else if (checkValCode.type === 'SUBTABLE') {
-                subTableRowCheck = true;
-              }
-            }
+            if (checkValCode.type === 'SUBTABLE') {
+              checkValCode.fields.forEach(function(fieldsIntableVal) {
+                let fieldsIntable = fieldsIntableVal.code;
+                if (thisOptionValue == fieldsIntable) {
+                  subTableRowCheck = true;
+                  }
+                });
+                } else if (thisOptionValue == checkValCode.code) {
+                  notSubTableRowCheck = true;
+                }
 
             //check if all of selected options are 'SUBTABLE' type
             if (subTableRowCheck && notSubTableRowCheck) {
@@ -310,7 +310,6 @@ jQuery.noConflict();
     // remove selected row in table setting
     $(document).on("click", ".removeList_1", function () {
       $(this).parent("td").parent("tr").remove();
-      console.log($("#table_spaces tbody>tr"));
       checkRowSpace();
     });
 
@@ -333,11 +332,10 @@ jQuery.noConflict();
         $(`#kintoneplugin-setting-tbody > tr:nth-child(${trLength}) > td input[name='lang_code']`).val(setCode);
       }  
     });
-    
-    let found = false;
-    // reflection btn.
-    $(document).on("click", ".reset-btn", function () {
-      //check when have the same language
+
+    //to do reflection function
+    function reflection() {
+        //check when have the same language
       let lang_list_count = $("#kintoneplugin-setting-tbody > tr").length;
       $("#kintoneplugin-setting-tbody > tr > td select[name='country-selection'] option:selected").each(function (index) {
 
@@ -405,7 +403,11 @@ jQuery.noConflict();
           </td>`);
         checkRowSpace();
       }
-    });
+    }
+    
+    let found = false;
+    // reflection btn.
+    $(document).on("click", ".reset-btn", reflection);
     
     // Drag and Drop
     $('#kintoneplugin-setting-tbody > tr').on('dragstart', function (event) {
@@ -444,10 +446,10 @@ jQuery.noConflict();
       $(this).removeClass('dragging');
     });
 
-    confirmButton.on('click', function () {
+    //save button
+    confirmButton.on('click', async function () {
 
       let checkList = false;
-
       if ($(translate_url).val() == '' && !checkList) {
         checkList = true;
         Swal10.fire({
@@ -470,13 +472,14 @@ jQuery.noConflict();
                   html: `Please select language list!!!`,
                 });
       }else if($(`#table_lang tbody tr:eq(${1})> td select[name='country-selection'] option:selected`).val() !== '-----' && $("select[name='default_lang'] option").length == 1) {
-
+              checkList = true;
               Swal10.fire({
                 icon: 'error',
                 title: 'Oops...',
                 html: `Language list and Lnaguage default not match!<br>Plase click Reflection button!`,
               });
       }else if($("select[name='default_lang'] option").length == table.length) {
+
               $("select[name='default_lang'] option").slice(1).each(function(index) {
                 let optionValue = $(this).val();
                 let operationIndex = index;
@@ -493,14 +496,16 @@ jQuery.noConflict();
                       checkList = false;
                     }
               });
-            } else {
+      } else if($("select[name='default_lang'] option").length != table.length){
               checkList = true;
                   Swal10.fire({
                       icon: 'error',
                       title: 'Oops...',
                       html: `Language list and Lnaguage default not match!<br>Plase click Reflection button!`,
                     });
-            }   
+      } else {
+        checkList = false;
+      }
       
     }
 
@@ -510,22 +515,25 @@ jQuery.noConflict();
       let textInputs = $('#table_spaces').find('input[type="text"]');
       let space_length = $(`#table_spaces tbody tr`).length;
 
+      let check_item = false;
       for (let k = 1; k < space_length; k++) {
         const space_index = k;
-        let check_item = false;
         textInputs.slice(1).each(function(index) {
           let index_check = k - 1;
           let inputValue = $(this).val();
           
           // Do something with the input value
           if ($(`#table_spaces tbody tr:eq(${space_index})> td input[type="text"]`).val() === '') {
+                  check_item = true;
+                  checkList = true;
                   Swal10.fire({
                     icon: 'error',
                     title: 'Oops...',
                     html: `Please Input all of Item!!`,
                   });
-                  check_item = true;
+                  return false;
           }else if (index_check != index && inputValue == $(`#table_spaces tbody tr:eq(${space_index})> td input[type="text"]`).val()) {
+                  checkList = true;
                   Swal10.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -533,74 +541,123 @@ jQuery.noConflict();
                   });
                   check_item = true;
                   return false;
-          } else {
+          }else{
             check_item = false;
           }
         });
+      } 
 
-        if (!check_item) {
+      if (!check_item) {
+        let header = {
+          'app': kintone.app.getId()
+        }
 
-          let header = {
-            'app': kintone.app.getId()
-          }
+        for (let k = 1; k < space_length; k++) {
+        const space_fields = k;
+        await kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, async function (resp) {
+          let data = resp.properties;
+          let subTableCheck = false;
+          let notSubTableCheck = false;
+          for await (const option of $(`#table_spaces > tbody > tr:eq(${space_fields}) > td select[name='select_field_translate'] option:selected`)){
+            let value = $(option).val();
 
-          kintone.api(kintone.api.url('/k/v1/preview/form', true), 'GET', header, function (resp) {
-            let data = resp.properties;
-            let subTableCheck = false;
-            let notSubTableCheck = false;
-            $(`#table_spaces > tbody > tr:eq(${space_index}) > td select[name='select_field_translate'] option:selected`).each(async function() {
-              let value = $(this).val();
-
-              
-              for (let index = 0; index < data.length; index++) {
-                const checkValname = data[index];
-                if (value == checkValname.code) {
-                  if(checkValname.type !== 'SUBTABLE') {
-                    // notSubTableCheck.push(checkValname);
-                    subTableCheck = true;
-                  }
-                  if (checkValname.type === 'SUBTABLE') {
-                    // subTableCheck.push(checkValname);
+            for await (let item of data) {
+              const checkValname = item;
+              if (checkValname.type === 'SUBTABLE') {
+                checkValname.fields.forEach(function(fieldsIntable) {
+                  let fieldsIntableVal = fieldsIntable.code;
+                  if (value == fieldsIntableVal) {
+                        subTableCheck = true;
+                    }
+                  });
+                  } else if (value == checkValname.code) {
                     notSubTableCheck = true;
                   }
+            
                 }
-
-                 if (subTableCheck && notSubTableCheck) {
-                  checkList = true;
-                  Swal10.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    html: `subtable to select not match!!`,
-                  });
-                  return;
-                }else {
-                  checkList = false;
-                } 
-              }
-            });
-          });
-        }
-      }
-        
-      }
-
       
-      // Loop through the selected inputs
-      // if (!checkList) {
-      //   let config = setConfig();
-      //       kintone.plugin.app.setConfig(config, function () {
-      //         Swal10.fire(
-      //           'Complete',          
-      //           'successfully',
-      //           'success'
-      //         ).then(function () {
-      //           window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
-      //         });
-      //       });
-      // }
-
+            if (subTableCheck && notSubTableCheck) {
+              Swal10.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: `subtable to select not match!!`,
+              });
+              return;
+            }
+          }
+          
+          let config = setConfig();
+              kintone.plugin.app.setConfig(config, function () {
+                Swal10.fire(
+                  'Complete',          
+                  'successfully',
+                  'success'
+                ).then(function () {
+                  // return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+                });
+              });
+        });
+      }
+      
+    
+    }
+    }
     });
 
+
+    //todo setDefault from config function
+    async function setDefault() {
+      const languageList = JSON.parse(CONF.language_list);
+      const translateEngine = JSON.parse(CONF.translate_engine);
+      const translateFields = JSON.parse(CONF.translate_fields);
+      $(translate_url).val(translateEngine.url);
+      $(header_1).val(translateEngine.headers[0].header);
+      $(header_2).val(translateEngine.headers[1].header);
+      $(header_3).val(translateEngine.headers[2].header);
+
+      $(`input[name='engine'][value='${translateEngine.type}']`).prop('checked', true);
+      $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop('checked', true);
+
+      //check current engine
+      checkEngine();
+
+      let languageListTr = $("#kintoneplugin-setting-tbody > tr");
+      for (let i = 1; i <= languageList.length; i++) {
+        $("#kintoneplugin-setting-tbody > tr").eq(0).clone(true).insertAfter(
+          $("#kintoneplugin-setting-tbody > tr").eq(i - 1)
+        );
+
+        //set value from config to setting
+        $(`#table_lang tbody tr:eq(${i})> td select[name='country-selection']`).val(languageList[i - 1].language),
+        $(`#table_lang tbody tr:eq(${i})> td input[name='button_label']`).val(languageList[i - 1].button_label),
+        $(`#table_lang tbody tr:eq(${i})> td input[name='lang_code']`).val(languageList[i - 1].lang_code),
+        $(`#table_lang tbody tr:eq(${i})> td input[name='code_iso']`).val(languageList[i - 1].iso)
+      }
+
+      //set value to default language and translate fields column
+      await setFieldSpace();
+      reflection();
+      //set default language
+      $(`select[name='default_lang']`).val(CONF.default_language);
+
+      //set value to translate fields
+      for (let i = 1; i <= translateFields.length; i++) {
+        $("#table_spaces > tbody > tr").eq(0).clone(true).insertAfter(
+          $("#table_spaces > tbody > tr").eq(i - 1)
+        );
+
+        $(`#table_spaces tbody tr:eq(${i})> td input[name='item_code']`).val(translateFields[i-1].item_code)
+        $(`#table_spaces tbody tr:eq(${i})> td select[name='select_field_space']`).val(translateFields[i-1].space_element)
+
+        //set value to translate fields table
+        $(`#table_spaces tbody tr:eq(${i})> td select[name='select_field_translate']`).each(function (index, field) {
+          let optionVar = translateFields[i-1].target_fields[index].field;
+          $(field).val(optionVar).change();
+        });
+      }
+    }
+    
+    if(CONF) return setDefault();
     setFieldSpace();
   });
 
