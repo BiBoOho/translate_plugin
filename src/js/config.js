@@ -47,6 +47,7 @@ jQuery.noConflict();
         $(this).removeAttr("checked");
       });
       $(this).attr("checked", true);
+      $(this).prop("checked", true);
       tran_direction = $("input[name='tran_direction']:checked").val();
     });
 
@@ -111,7 +112,7 @@ jQuery.noConflict();
           $("#table_language_list tbody tr select[name='language-selection']").eq(element).parent().addClass("set-border");
         }
       }
-      
+
     }
 
     //when change language List
@@ -578,6 +579,7 @@ jQuery.noConflict();
 
       $(`input[name='engine'][value='${translateEngine.type}']`).prop("checked",true);
       $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+      $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
       tran_direction = CONF.translate_direction;
 
       //check current engine
