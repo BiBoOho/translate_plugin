@@ -11,7 +11,6 @@ jQuery.noConflict();
   let header_3 = $("#header_3");
 
   let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
-  console.log("🚀 ~ file: config.js:14 ~ CONF:", CONF)
   
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
@@ -24,8 +23,8 @@ jQuery.noConflict();
 
   // check row to hide remove row button if its has one row
   const checkRowSpace = () => {
-    if ($("#table_translate_field tbody>tr").length === 2) {
-      $("#table_translate_field tbody>tr .removeList_1").hide();
+    if ($("#table_translate_field tbody > tr").length === 2) {
+      $("#table_translate_field tbody > tr .removeList_1").hide();
     } else {
       $(".removeList_1").show();
     }
@@ -469,83 +468,85 @@ jQuery.noConflict();
           return false;
         }
 
-      
-      let header = {
-        app: kintone.app.getId(),
-      };
-      const getFields = await kintone.api('/k/v1/preview/form', 'GET', header);
-      const data = getFields.properties;
-
-        //validate when have the same Item
-        let textInputs = $("#table_translate_field").find('input[type="text"]');
-        let space_length = $(`#table_translate_field tbody tr`).length;
-
-        let conditionForCheck = false;
-        for (let k = 1; k < space_length; k++) {
-          const space_index = k;
-          textInputs.slice(1).each(function (index) {
-            let index_check = k - 1;
-            let inputValue = $(this).val();
-
-            // Do something with the input value
-            if ($(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val() === "") {
-              conditionForCheck = true;
-              checkList = true;
-              Swal10.fire({
-                icon: "error",
-                title: "Oops...",
-                html: `Please Input all of Item!!`,
-              });
-              return false;
-            } else if (
-              index_check != index &&
-              inputValue == $(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()
-            ) {
-              checkList = true;
-              conditionForCheck = true;
-              Swal10.fire({
-                icon: "error",
-                title: "Oops...",
-                html: `Have the same Item "${$(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()}" !!`,
-              });
-              return false;
-            }
-          });
-        }
-
-        if (!conditionForCheck) {
+      if (!checkList) {
+        let header = {
+          app: kintone.app.getId(),
+        };
+        const getFields = await kintone.api('/k/v1/preview/form', 'GET', header);
+        const data = getFields.properties;
+  
+          //validate when have the same Item
+          let textInputs = $("#table_translate_field").find('input[type="text"]');
+          let space_length = $(`#table_translate_field tbody tr`).length;
+  
+          let conditionForCheck = false;
           for (let k = 1; k < space_length; k++) {
-            const space_fields = k;
-            let subTableCheck = false;
-            let notSubTableCheck = false;
-            for await (const option of $(`#table_translate_field > tbody > tr:eq(${space_fields}) > td select[name='select_field_translate'] option:selected`)) {
-              let value = $(option).val();
-
-              for await (let item of data) {
-                const checkValname = item;
-                if (checkValname.type === "SUBTABLE") {
-                  checkValname.fields.forEach(function (fieldsIntable) {
-                    let fieldsIntableVal = fieldsIntable.code;
-                    if (value == fieldsIntableVal) {
-                      subTableCheck = true;
-                    }
-                  });
-                } else if (value == checkValname.code) {
-                  notSubTableCheck = true;
-                }
-              }
-
-              if (subTableCheck && notSubTableCheck) {
+            const space_index = k;
+            textInputs.slice(1).each(function (index) {
+              let index_check = k - 1;
+              let inputValue = $(this).val();
+  
+              // Do something with the input value
+              if ($(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val() === "") {
+                conditionForCheck = true;
+                checkList = true;
                 Swal10.fire({
                   icon: "error",
                   title: "Oops...",
-                  html: `If a subtable is selected in any of the other options, it must be a subtable.!!`,
+                  html: `Please Input all of Item!!`,
                 });
-                return;
+                return false;
+              } else if (
+                index_check != index &&
+                inputValue == $(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()
+              ) {
+                checkList = true;
+                conditionForCheck = true;
+                Swal10.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  html: `Have the same Item "${$(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()}" !!`,
+                });
+                return false;
+              }
+            });
+          }
+  
+          if (!conditionForCheck) {
+            for (let k = 1; k < space_length; k++) {
+              const space_fields = k;
+              let subTableCheck = false;
+              let notSubTableCheck = false;
+              for await (const option of $(`#table_translate_field > tbody > tr:eq(${space_fields}) > td select[name='select_field_translate'] option:selected`)) {
+                let selectedFieldVal = $(option).val();
+  
+                for await (let item of data) {
+                  const checkValname = item;
+                  if (checkValname.type === "SUBTABLE") {
+                    checkValname.fields.forEach(function (fieldsIntable) {
+                      let fieldsIntableVal = fieldsIntable.code;
+                      if (selectedFieldVal == fieldsIntableVal) {
+                        subTableCheck = true;
+                      }
+                    });
+                  } else if (selectedFieldVal == checkValname.code) {
+                    notSubTableCheck = true;
+                  }
+                }
+  
+                if (subTableCheck && notSubTableCheck) {
+                  Swal10.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    html: `If a subtable is selected in any of the other options, it must be a subtable.!!`,
+                  });
+                  return;
+                }
               }
             }
           }
-        }
+      }
+      
       // }
       if (!checkList) {
         let config = setConfig();

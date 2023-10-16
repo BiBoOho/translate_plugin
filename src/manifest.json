@@ -27,9 +27,7 @@
       "css/51-modern-default.css",
       "css/config.css"
     ],
-    "required_params": [
-      "message"
-    ]
+    "required_params": []
   },
   "name": {
     "en": "Translate_plugin"
