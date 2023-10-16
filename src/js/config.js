@@ -36,12 +36,17 @@ jQuery.noConflict();
 
   $(document).ready(function () {
     //events user chabge angine
-    let currentEngine;
+    let currentEngine = '';
     let languageListForUse = langList.google_tran_api;
-    let tran_direction = $("input[name='tran_direction']:checked").val();
+    let tran_direction = '';
 
+    //wheen change the translate direction
     $(document).on("change", "input[name='tran_direction']", function () {
-      //check current translation direction
+      //remove all checked current translation direction
+      $( "input[name='tran_direction']" ).each(function() {
+        $(this).removeAttr("checked");
+      });
+      $(this).attr("checked", true);
       tran_direction = $("input[name='tran_direction']:checked").val();
     });
 
@@ -106,6 +111,7 @@ jQuery.noConflict();
           $("#table_language_list tbody tr select[name='language-selection']").eq(element).parent().addClass("set-border");
         }
       }
+      
     }
 
     //when change language List
@@ -412,8 +418,8 @@ jQuery.noConflict();
 
     //when save button click
     confirmButton.on("click", async function () {
-      let checkList = false;
-      if ($(translate_url).val() == "" && !checkList) {
+      let invalidFieldExisted = false;
+      if ($(translate_url).val() == "") {
         Swal10.fire({
           icon: "error",
           title: "Oops...",
@@ -447,7 +453,7 @@ jQuery.noConflict();
 
               //check Option match with code iso
               if ($(`#table_language_list tbody tr:eq(${ operationIndex + 1 })> td input[name='code_iso']`).val() !== optionValue) {
-                checkList = true;
+                invalidFieldExisted = true;
                 Swal10.fire({
                   icon: "error",
                   title: "Oops...",
@@ -459,7 +465,7 @@ jQuery.noConflict();
         } else if (
           $("select[name='default_lang'] option").length != languageListRow.length
         ) {
-          checkList = true;
+          invalidFieldExisted = true;
           Swal10.fire({
             icon: "error",
             title: "Oops...",
@@ -468,7 +474,7 @@ jQuery.noConflict();
           return false;
         }
 
-      if (!checkList) {
+      if (!invalidFieldExisted) {
         let header = {
           app: kintone.app.getId(),
         };
@@ -489,7 +495,7 @@ jQuery.noConflict();
               // Do something with the input value
               if ($(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val() === "") {
                 conditionForCheck = true;
-                checkList = true;
+                invalidFieldExisted = true;
                 Swal10.fire({
                   icon: "error",
                   title: "Oops...",
@@ -500,7 +506,7 @@ jQuery.noConflict();
                 index_check != index &&
                 inputValue == $(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()
               ) {
-                checkList = true;
+                invalidFieldExisted = true;
                 conditionForCheck = true;
                 Swal10.fire({
                   icon: "error",
@@ -546,9 +552,8 @@ jQuery.noConflict();
             }
           }
       }
-      
-      // }
-      if (!checkList) {
+
+      if (!invalidFieldExisted) {
         let config = setConfig();
       await kintone.plugin.app.setConfig(config, function () {
         Swal10.fire("Complete", "successfully", "success").then(
@@ -572,7 +577,8 @@ jQuery.noConflict();
       $(header_3).val(translateEngine.headers[2].header);
 
       $(`input[name='engine'][value='${translateEngine.type}']`).prop("checked",true);
-      $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
+      $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+      tran_direction = CONF.translate_direction;
 
       //check current engine
       checkEngine();
