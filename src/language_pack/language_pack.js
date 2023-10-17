@@ -368,7 +368,7 @@ let langPack = function () {
             {
                 language: 'Maithili',
                 code: 'mai',
-                code3: ''
+                code3: 'mai'
             },
             {
                 language: 'Malagasy',

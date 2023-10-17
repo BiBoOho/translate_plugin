@@ -11,6 +11,7 @@ jQuery.noConflict();
   let header_3 = $("#header_3");
 
   let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
+  console.log("🚀 ~ file: config.js:14 ~ CONF:", CONF)
   
   // check row to hide remove row button if its has one row
   const checkRowNumber = () => {
@@ -38,12 +39,12 @@ jQuery.noConflict();
     //events user chabge angine
     let currentEngine = '';
     let languageListForUse = langList.google_tran_api;
-    let tran_direction = '';
+    let tran_direction = $("input[name='tran_direction']:checked").val();
 
     //wheen change the translate direction
     $(document).on("change", "input[name='tran_direction']", function () {
       //remove all checked current translation direction
-      $( "input[name='tran_direction']" ).each(function() {
+      $("input[name='tran_direction']").each(function() {
         $(this).removeAttr("checked");
       });
       $(this).attr("checked", true);
@@ -123,7 +124,7 @@ jQuery.noConflict();
 
     //set default when not have config value
     function setInitiative() {
-      if (!CONF) {
+      if (jQuery.isEmptyObject(CONF)) {
         for (let k = 0; k < languageListForUse.length; k++) {
           let language = languageListForUse[k].language;
           $("select[name='language-selection']").append(
@@ -475,7 +476,6 @@ jQuery.noConflict();
           return false;
         }
 
-      if (!invalidFieldExisted) {
         let header = {
           app: kintone.app.getId(),
         };
@@ -512,7 +512,7 @@ jQuery.noConflict();
                 Swal10.fire({
                   icon: "error",
                   title: "Oops...",
-                  html: `Have the same Item "${$(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()}" !!`,
+                  html: `Have the same Item "${$(`#table_translate_field tbody tr:eq(${space_index})> td input[type="text"]`).val()}"!!`,
                 });
                 return false;
               }
@@ -522,11 +522,17 @@ jQuery.noConflict();
           if (!conditionForCheck) {
             for (let k = 1; k < space_length; k++) {
               const space_fields = k;
+              let emptyValCheck = 2;
               let subTableCheck = false;
               let notSubTableCheck = false;
               for await (const option of $(`#table_translate_field > tbody > tr:eq(${space_fields}) > td select[name='select_field_translate'] option:selected`)) {
                 let selectedFieldVal = $(option).val();
-  
+
+                // if have selected field
+                if (selectedFieldVal) {
+                  emptyValCheck-- 
+                }
+
                 for await (let item of data) {
                   const checkValname = item;
                   if (checkValname.type === "SUBTABLE") {
@@ -550,10 +556,20 @@ jQuery.noConflict();
                   return;
                 }
               }
+
+              // Check if the selected less than 2
+              if (emptyValCheck > 0) {
+                Swal10.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  html: `Each row of translate field must be selected more than 1 field `,
+                });
+                return;
+              }
             }
           }
-      }
 
+      //Confirmed through every check. 
       if (!invalidFieldExisted) {
         let config = setConfig();
       await kintone.plugin.app.setConfig(config, function () {
@@ -615,7 +631,7 @@ jQuery.noConflict();
       }
     }
 
-  if (CONF) return setDefault();
+  if (!jQuery.isEmptyObject(CONF)) return setDefault();
     setFieldSpace();
   });
 })(jQuery, Sweetalert2_10.noConflict(true), kintone.$PLUGIN_ID);
