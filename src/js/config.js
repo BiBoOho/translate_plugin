@@ -12,31 +12,38 @@ jQuery.noConflict();
 
   let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
 
-  const param = { app: kintone.app.getId() };
-  const FIELDS = await kintone.api("/k/v1/preview/form", "GET", param);
+  let FIELDS;
+  try {
+    let param = { app: kintone.app.getId() };
+    FIELDS = await kintone.api("/k/v1/preview/form", "GET", param);
+  } catch (error) {
+    alert(error)
+  }
   
-  // check if the table has only one row, hide remove button
-  const setActionBtnForLangList = () => {
+
+    // check if the table has only one row, hide remove button
+    const setActionBtnForLangList = () => {
     if ($("#table_language_list tbody > tr").length === 2) {
-      $("#table_language_list tbody > tr .removeList").eq(1).hide();
+      $("#table_language_list tbody > tr .removeRowLanguageList").eq(1).hide();
     } else {
-      $(".removeList").show();
+      $(".removeRowLanguageList").show();
     }
   };
 
   // check row to hide remove row button if its has one row
   const setActionBtnForTranslateFields = () => {
     if ($("#table_translate_field tbody > tr").length === 2) {
-      $("#table_translate_field tbody > tr .removeList_1").hide();
+      $("#table_translate_field tbody > tr .removeRowTranslateField").hide();
     } else {
-      $(".removeList_1").show();
+      $(".removeRowTranslateField").show();
     }
   };
 
+  
   $(document).ready(function () {
     //events user chabge angine
     let currentEngine = '';
-    let previous_engine = ''; 
+    let previous_engine = $("input[name='engine']:checked").val(); 
     let suporttedLangs = langList.google_tran_api;
     let tran_direction = $("input[name='tran_direction']:checked").val();
 
@@ -79,19 +86,19 @@ jQuery.noConflict();
       let languageMatch = []
       let languageNotMatch = [];
       let tableLanguageLength = $("#table_language_list tbody tr");
-
+      let isMatch = true;
       //loop value to have from the language list
       for (let i = 0; i < tableLanguageLength.length; i++) {
-        let tr = $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection'] option:selected`).val();
+        let selectedLang = $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection'] option:selected`).val();
         //condition when tr does not match with engine language
         let l;
-        for (l = dataLength - 1; l >= 0 && engine[l].language !== tr; l--);
+        for (l = dataLength - 1; l >= 0 && engine[l].language !== selectedLang; l--);
         // condition when value match
-        if (l >= 0 || tr === "-----") {
+        if (l >= 0 || selectedLang === "-----") {
             languageMatch.push(i);
        
         // condition when value dose not match    
-        }else if(l < 0 && tr !== '-----') {
+        }else if(l < 0 && selectedLang !== '-----') {
           languageNotMatch.push(i);
         }
       }
@@ -108,41 +115,40 @@ jQuery.noConflict();
               confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
           if (result.isConfirmed) {
-            if (languageMatch.length > 0) {
-              let rowLanguageIndex = languageMatch;
+              let rowLanguageIndex; //comment change to use languageMatch 
               for (let i = 0; i < languageMatch.length; i++){
                     rowLanguageIndex = languageMatch[i];
                     let previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val()
                     $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
                     $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
       
-                        //append new engine langueges list
-                        for (let j = 0; j < engine.length; j++){
-                          let language = engine[j].language;
-                          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
-                        }
-                        //set default value
-                        $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
+                    //append new engine langueges list
+                    for (let j = 0; j < engine.length; j++){
+                      let language = engine[j].language;
+                      $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
+                    }
+                    //set default value
+                    $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
               }
-            }
-                setPreviousEngine();
-                languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
 
-                for (let index = 0; index < languageNotMatch.length; index++) {
-                  const element = languageNotMatch[index];
-                  $("#table_language_list tbody tr").eq(element).remove();
-                }
+              setPreviousEngine();
+              languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
 
-                if($("#table_language_list tbody tr").length == 1) {
-                  $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#kintoneplugin-setting-tbody > tr")).eq(0);
-                  setActionBtnForLangList();
-                }
+              for (let index = 0; index < languageNotMatch.length; index++) {
+                const element = languageNotMatch[index];
+                $("#table_language_list tbody tr").eq(element).remove();
+              }
 
-                Swal10.fire(
-                  'Deleted!',
-                  'Your language has been deleted.',
-                  'success'
-                );
+              if($("#table_language_list tbody tr").length == 1) {
+                $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#kintoneplugin-setting-tbody > tr")).eq(0);
+                setActionBtnForLangList();
+              }
+
+              Swal10.fire(
+                'Deleted!',
+                'Your language has been deleted.',
+                'success'
+              );
 
           }else if(result.isDismissed){
             checkEngine(previous_engine);
@@ -176,75 +182,82 @@ jQuery.noConflict();
     
     //set default when not have config value
    async function setInitiative() {
-    //create a option to select space for Transacte fields
-      const param = { app: kintone.app.getId() };
-      const fields = await kintone.api("/k/v1/preview/app/form/layout","GET",param);
-      fields.layout.forEach((getSpaceFields) => {
-        getSpaceFields.fields.forEach((getSpaceFieldCode) => {
-          if (getSpaceFieldCode.type === "SPACER") {
-            $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(getSpaceFieldCode.elementId, getSpaceFieldCode.elementId));
-          }
-        });
-      });
+        try {
+            //create a option to select space for Transacte fields
+            const param = { app: kintone.app.getId() };
+            const fields = await kintone.api("/k/v1/preview/app/form/layout","GET",param); // comment use try catch
+            fields.layout.forEach((getSpaceFields) => {
+              getSpaceFields.fields.forEach((getSpaceFieldCode) => {
+                if (getSpaceFieldCode.type === "SPACER") {
+                  $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(getSpaceFieldCode.elementId, getSpaceFieldCode.elementId));
+                }
+              });
+            });
 
-      //check if have been or not config
-      if (jQuery.isEmptyObject(CONF)) {
-        for (let k = 0; k < suporttedLangs.length; k++) {
-          let language = suporttedLangs[k].language;
-          $("select[name='language-selection']").append(new Option(language, language));
-        }
+            //check if have been or not config
+            if (jQuery.isEmptyObject(CONF)) {
+              for (let k = 0; k < suporttedLangs.length; k++) {
+                let language = suporttedLangs[k].language;
+                $("select[name='language-selection']").append(new Option(language, language));
+              }
 
-        $("#table_language_list > tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list > tbody > tr")).eq(0);
-        $("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr")).eq(0);
-      }else {
+              $("#table_language_list > tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list > tbody > tr")).eq(0);
+              $("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr")).eq(0);
+              setActionBtnForLangList();
+              setActionBtnForTranslateFields();
 
-        //todo setDefault from config function
-        const languageList = JSON.parse(CONF.language_list);
-        const translateEngine = JSON.parse(CONF.translate_engine);
-        const translateFields = JSON.parse(CONF.translate_fields);
-        $(translate_url).val(translateEngine.url);
-        $(header_1).val(translateEngine.headers[0].header);
-        $(header_2).val(translateEngine.headers[1].header);
-        $(header_3).val(translateEngine.headers[2].header);
-    
-        currentEngine = translateEngine.type
-        $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
-        $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
-        tran_direction = CONF.translate_direction;
-        setPreviousEngine();
-    
-        //check current engine
-        let getCurrentEngine = await checkEngine(currentEngine);
-        createLanguageSelectionList(getCurrentEngine)
-    
-        for (let i = 1; i <= languageList.length; i++) {
-          $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list tbody > tr").eq(i - 1));
-    
-          //set value from config to setting
-          $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection']`).val(languageList[i - 1].language);
-          $(`#table_language_list tbody tr:eq(${i})> td input[name='button_label']`).val(languageList[i - 1].button_label);
-          $(`#table_language_list tbody tr:eq(${i})> td input[name='lang_code']`).val(languageList[i - 1].lang_code);
-          $(`#table_language_list tbody tr:eq(${i})> td input[name='code_iso']`).val(languageList[i - 1].iso);
+            } else {
+
+              //todo setDefault from config function
+              const languageList = JSON.parse(CONF.language_list);
+              const translateEngine = JSON.parse(CONF.translate_engine);
+              const translateFields = JSON.parse(CONF.translate_fields);
+              $(translate_url).val(translateEngine.url);
+              $(header_1).val(translateEngine.headers[0].header);
+              $(header_2).val(translateEngine.headers[1].header);
+              $(header_3).val(translateEngine.headers[2].header);
+          
+              currentEngine = translateEngine.type
+              $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+              $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
+              tran_direction = CONF.translate_direction;
+              setPreviousEngine();
+          
+              //check current engine
+              let getCurrentEngine = await checkEngine(currentEngine);
+              createLanguageSelectionList(getCurrentEngine)
+          
+              for (let i = 1; i <= languageList.length; i++) {
+                $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list tbody > tr").eq(i - 1));
+          
+                //set value from config to setting
+                $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection']`).val(languageList[i - 1].language);
+                $(`#table_language_list tbody tr:eq(${i})> td input[name='button_label']`).val(languageList[i - 1].button_label);
+                $(`#table_language_list tbody tr:eq(${i})> td input[name='lang_code']`).val(languageList[i - 1].lang_code);
+                $(`#table_language_list tbody tr:eq(${i})> td input[name='code_iso']`).val(languageList[i - 1].iso);
+              }
+          
+              //set value to default language and translate fields column
+              await reflection();
+              //set default language
+              $(`select[name='default_lang']`).val(CONF.default_language);
+          
+              //set value to translate fields
+              for (let i = 1; i <= translateFields.length; i++) {$("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr").eq(i - 1));
+          
+                $(`#table_translate_field tbody tr:eq(${i})> td input[name='item_code']`).val(translateFields[i - 1].item_code);
+                $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_space']`).val(translateFields[i - 1].space_element);
+          
+                //set value to translate fields table
+                $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_translate']`).each(function (index, field) {
+                  let optionVar = translateFields[i - 1].target_fields[index].field;
+                  $(field).val(optionVar).change();
+                });
+              }
+            }
+        } catch (error) {
+            alert(error);
         }
-    
-        //set value to default language and translate fields column
-        await reflection();
-        //set default language
-        $(`select[name='default_lang']`).val(CONF.default_language);
-    
-        //set value to translate fields
-        for (let i = 1; i <= translateFields.length; i++) {$("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr").eq(i - 1));
-    
-          $(`#table_translate_field tbody tr:eq(${i})> td input[name='item_code']`).val(translateFields[i - 1].item_code);
-          $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_space']`).val(translateFields[i - 1].space_element);
-    
-          //set value to translate fields table
-          $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_translate']`).each(function (index, field) {
-            let optionVar = translateFields[i - 1].target_fields[index].field;
-            $(field).val(optionVar).change();
-          });
-        }
-      }
     }
 
     // set dropdown to select SINGLE_LINE_TEXT, RICH_TEXT, SUBTABLE, MULTI_LINE_TEXT field
@@ -349,27 +362,27 @@ jQuery.noConflict();
     };
 
     // add new row in table setting
-    $(document).on("click", ".addList", function () {
+    $(document).on("click", ".addRowLanguageList", function () {// comment change addList ==> tabel
       // clone the row without its data
       let $newRow = $("#table_language_list tbody > tr").eq(0).clone(true);
       $(this).parent().parent().after($newRow);
       setActionBtnForLangList();
     });
 
-    $(document).on("click", ".addList_1", function () {
+    $(document).on("click", ".addRowTranslateField", function () {// comment change addList_1 ==> tabel
       let $newRowSpace = $("#table_translate_field > tbody > tr").eq(0).clone(true);
       $(this).parent().parent().after($newRowSpace);
       setActionBtnForTranslateFields();
     });
 
     // remove selected row in table setting
-    $(document).on("click", ".removeList", function () {
+    $(document).on("click", ".removeRowLanguageList", function () {// comment change removeList ==> tabel
       $(this).parent("td").parent("tr").remove();
       setActionBtnForLangList();
     });
 
     // remove selected row in table setting
-    $(document).on("click", ".removeList_1", function () {
+    $(document).on("click", ".removeRowTranslateField", function () {// comment change removeRowTranslateField ==> tabel
       $(this).parent("td").parent("tr").remove();
       setActionBtnForTranslateFields();
     });
@@ -434,12 +447,24 @@ jQuery.noConflict();
     });
 
 
-    let foundDuplicate = false;
     //to do reflection function
     async function reflection() {
+      let foundDuplicate = false;
+
       //comment check language duplicated  the process is too complicated 
       let targetValueCheck = [];
       let lang_list_count = $("#table_language_list tbody > tr").length;
+      for (let j = 2; j <= lang_list_count; j++) {
+        if ($("#table_language_list tbody > tr:nth-child("+ j +") input[name='button_label']").val() == "") {
+          Swal10.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please enter the Button label!!",
+          });
+          foundDuplicate = true; // change to use return
+        }
+      }
+
       $("#table_language_list tbody > tr > td select[name='language-selection'] option:selected").each(function () {
         // Target value to check
         let targetValue = $(this).val();
@@ -449,13 +474,14 @@ jQuery.noConflict();
             title: "Oops...",
             text: "Your language list choices have the same language.!!",
           });
+          foundDuplicate = true; // change to use return
         }
         else{
           targetValueCheck.push(targetValue);
         }
       });
 
-      if (!foundDuplicate) {
+      if (!foundDuplicate) { // change to use return
         // clone the row without its data
         $("select[name='default_lang'] > option").remove();
         $("#table_translate_field > thead > tr > th:nth-child(n+3)").remove();
@@ -487,10 +513,9 @@ jQuery.noConflict();
           }
         }
         await setFieldList();
-        $("#table_translate_field tbody>tr")
-          .append(`<td style="display: flex;" class="kintoneplugin-table-td-operation">
-              <button type="button" class="kintoneplugin-button-add-row-image addList_1" title="Add row"></button>
-              <button type="button" class="kintoneplugin-button-remove-row-image removeList_1" title="Delete this row"></button>
+        $("#table_translate_field tbody>tr").append(`<td style="display: flex;" class="kintoneplugin-table-td-operation">
+              <button type="button" class="kintoneplugin-button-add-row-image addRowTranslateField" title="Add row"></button>
+              <button type="button" class="kintoneplugin-button-remove-row-image removeRowTranslateField" title="Delete this row"></button>
           </td>`);
         setActionBtnForTranslateFields();
       }
@@ -656,7 +681,5 @@ jQuery.noConflict();
     });
 
     setInitiative();
-    setActionBtnForLangList();
-    setActionBtnForTranslateFields();
   });
 })(jQuery, Sweetalert2_10.noConflict(true), kintone.$PLUGIN_ID);
