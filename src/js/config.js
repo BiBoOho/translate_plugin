@@ -9,6 +9,7 @@ jQuery.noConflict();
   let header_1 = $("#header_1");
   let header_2 = $("#header_2");
   let header_3 = $("#header_3");
+  let getCurrentEngine;
 
   let CONF = kintone.plugin.app.getConfig(PLUGIN_ID);
 
@@ -76,104 +77,70 @@ jQuery.noConflict();
     //when changing engine
     $(document).on("change", "input[name='engine']", async function () {
       let engineSelected = $(this).val();
-      let getCurrentEngine =  await checkEngine(engineSelected);
-      createLanguageSelectionList(getCurrentEngine)
+      getCurrentEngine =  await checkEngine(engineSelected);
+      createLanguageSelectionList();
     });
 
-    //check engine are match or not match
-    function createLanguageSelectionList(engine) {
-      let dataLength = engine.length;
-      let languageMatch = []
-      let languageNotMatch = [];
-      let tableLanguageLength = $("#table_language_list tbody tr");
-      let isMatch = true;
-      //loop value to have from the language list
-      for (let i = 0; i < tableLanguageLength.length; i++) {
-        let selectedLang = $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection'] option:selected`).val();
-        //condition when tr does not match with engine language
-        let l;
-        for (l = dataLength - 1; l >= 0 && engine[l].language !== selectedLang; l--);
-        // condition when value match
-        if (l >= 0 || selectedLang === "-----") {
-            languageMatch.push(i);
-       
-        // condition when value dose not match    
-        }else if(l < 0 && selectedLang !== '-----') {
-          languageNotMatch.push(i);
-        }
-      }
-
-      //popup sweent alert when tr does not match
-      if (languageNotMatch.length > 0) {
-            Swal10.fire({
-              title: 'Are you sure?',
-              text: "Have "+languageNotMatch.length+" language not match",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-              let rowLanguageIndex; //comment change to use languageMatch 
-              for (let i = 0; i < languageMatch.length; i++){
-                    rowLanguageIndex = languageMatch[i];
-                    let previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val()
-                    $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
-                    $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
-      
-                    //append new engine langueges list
-                    for (let j = 0; j < engine.length; j++){
-                      let language = engine[j].language;
-                      $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
-                    }
-                    //set default value
-                    $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
-              }
-
-              setPreviousEngine();
-              languageNotMatch.sort((a, b) => b - a); // sort data to be ASD
-
-              for (let index = 0; index < languageNotMatch.length; index++) {
-                const element = languageNotMatch[index];
-                $("#table_language_list tbody tr").eq(element).remove();
-              }
-
-              if($("#table_language_list tbody tr").length == 1) {
-                $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#kintoneplugin-setting-tbody > tr")).eq(0);
-                setActionBtnForLangList();
-              }
-
-              Swal10.fire(
-                'Deleted!',
-                'Your language has been deleted.',
-                'success'
-              );
-
-          }else if(result.isDismissed){
-            checkEngine(previous_engine);
+    function languageListValidation() {
+      let selectedLangs= [];
+      let index = 0;
+      let selectedArrLang = $(`#table_language_list tbody tr > td select[name='language-selection'] option:selected`);
+      const promises = selectedArrLang.map((element) => {
+        let val = $(element).val();
+        // console.log(index);
+        const isLangIncluded = getCurrentEngine.some(obj => obj.language === val);
+        console.log("🚀 BBBBBBBB");
+        if (!isLangIncluded && index !== 0) {
+          Swal10.fire({
+            title: 'Are you sure?',
+            text: "Have language not match",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isDismissed) {
+              console.log('dismiss');
+              checkEngine(previous_engine);
             $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
-          }
-        });
+              return false;
+            }
+          });
+        }
+        console.log('CCCCCC');
+        selectedLangs.push(index);
+        index++;
+      });
+      Promise.all(promises);
+      return selectedLangs;
+    }
 
-      }else if (languageMatch.length > 0) {
-          let rowLanguageIndex = languageMatch;
-          for (let i = 0; i < languageMatch.length; i++){
-                rowLanguageIndex = languageMatch[i];
-                let previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val()
-                $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
-                $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
+    //check engine are match or not match
+    async function createLanguageSelectionList() {
 
-                    //append new engine langueges list
-                    for (let j = 0; j < engine.length; j++){
-                      let language = engine[j].language;
-                      $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
-                    }
-                    //set default value
-                    $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
+      console.log('AAAAAAAAAAA');
+      let checkResult = await languageListValidation();
+      console.log('DDDDDDD');
+      if(!checkResult) return;
+      console.log(getCurrentEngine);
+
+     for (let i = 0; i < checkResult.length; i++) {
+
+          let rowLanguageIndex = checkResult[i];
+          console.log("🚀 ~ file: config.js:218 ~ createLanguageSelectionList ~ rowLanguageIndex:", rowLanguageIndex)
+          let previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val() || "-----";
+          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
+          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
+
+          //append new engine langueges list
+          for (let j = 0; j < getCurrentEngine.length; j++){
+            let language = getCurrentEngine[j].language;  
+            $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
           }
-          setPreviousEngine();
-      }
+          //set default value
+          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
+    }
     }
 
     function setPreviousEngine() {
