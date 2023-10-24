@@ -18,7 +18,8 @@ jQuery.noConflict();
     let param = { app: kintone.app.getId() };
     FIELDS = await kintone.api("/k/v1/preview/form", "GET", param);
   } catch (error) {
-    alert(error)
+    alert(error);
+    return
   }
   
 
@@ -54,7 +55,6 @@ jQuery.noConflict();
       $("input[name='tran_direction']").each(function() {
         $(this).removeAttr("checked");
       });
-      $(this).attr("checked", true);
       $(this).prop("checked", true);
       tran_direction = $("input[name='tran_direction']:checked").val();
     });
@@ -78,154 +78,158 @@ jQuery.noConflict();
     $(document).on("change", "input[name='engine']", async function () {
       let engineSelected = $(this).val();
       getCurrentEngine =  await checkEngine(engineSelected);
-      createLanguageSelectionList();
+
+      let languageSelectedVal = [];
+      let isMatch = true;
+      //loop value to have from the language list
+      $("select[name='language-selection']").each(function(index) {
+        let selectedLang = $(this).val();
+        //condition when tr does not match with engine language
+        if (!getCurrentEngine.some(obj => obj.language === selectedLang) && selectedLang !== "-----") {
+          isMatch = false;
+        }
+
+        languageSelectedVal.push(index);
+      });
+
+      //check if have language not match
+      if (!isMatch) {
+        Swal10.fire({
+                  title: 'Are you sure?',
+                  text: "Have language not match",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                  if (result.isConfirmed) {
+                    createLanguageSelectionList(languageSelectedVal, getCurrentEngine)
+                      Swal10.fire(
+                        'Deleted!',
+                        'Your language has been deleted.',
+                        'success'
+                      );
+                  }else if(result.isDismissed){
+                    checkEngine(previous_engine);
+                    $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
+                  }
+                });
+      }else{
+        createLanguageSelectionList(languageSelectedVal, getCurrentEngine)
+      }
+      
     });
 
-    function languageListValidation() {
-      let selectedLangs= [];
-      let index = 0;
-      let selectedArrLang = $(`#table_language_list tbody tr > td select[name='language-selection'] option:selected`);
-      const promises = selectedArrLang.map((element) => {
-        let val = $(element).val();
-        // console.log(index);
-        const isLangIncluded = getCurrentEngine.some(obj => obj.language === val);
-        console.log("🚀 BBBBBBBB");
-        if (!isLangIncluded && index !== 0) {
-          Swal10.fire({
-            title: 'Are you sure?',
-            text: "Have language not match",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            if (result.isDismissed) {
-              console.log('dismiss');
-              checkEngine(previous_engine);
-            $("input[name='engine'][value="+previous_engine+"]").prop("checked", true);
-              return false;
-            }
-          });
-        }
-        console.log('CCCCCC');
-        selectedLangs.push(index);
-        index++;
-      });
-      Promise.all(promises);
-      return selectedLangs;
-    }
-
     //check engine are match or not match
-    async function createLanguageSelectionList() {
+    async function  createLanguageSelectionList(beforeLanguageVal, engine) {
+      let previous_value
+      let rowLanguageIndex; 
+          for (let i = 0; i < beforeLanguageVal.length; i++){
+              rowLanguageIndex = beforeLanguageVal[i];
+              previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val();
 
-      console.log('AAAAAAAAAAA');
-      let checkResult = await languageListValidation();
-      console.log('DDDDDDD');
-      if(!checkResult) return;
-      console.log(getCurrentEngine);
+              if (!engine.some(obj => obj.language === previous_value) && previous_value !== "-----") {
+                previous_value = "-----";
+              }
 
-     for (let i = 0; i < checkResult.length; i++) {
+                $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
+                $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
+  
+                //append new engine langueges list
+                for (let j = 0; j < engine.length; j++){
+                  let language = engine[j].language;
+                  $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
+                }
 
-          let rowLanguageIndex = checkResult[i];
-          console.log("🚀 ~ file: config.js:218 ~ createLanguageSelectionList ~ rowLanguageIndex:", rowLanguageIndex)
-          let previous_value = $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] option:selected").val() || "-----";
-          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection'] > option").remove();
-          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option('-----', '-----'));
-
-          //append new engine langueges list
-          for (let j = 0; j < getCurrentEngine.length; j++){
-            let language = getCurrentEngine[j].language;  
-            $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").append(new Option(language, language));
+                //set default value
+                $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
           }
-          //set default value
-          $("#table_language_list tbody tr:eq("+rowLanguageIndex+")> td select[name='language-selection']").val(previous_value).change();
-    }
-    }
-
-    function setPreviousEngine() {
-      previous_engine = $("input[name='engine']:checked").val();
+          previous_engine = $("input[name='engine']:checked").val();
     }
     
     //set default when not have config value
-   async function setInitiative() {
-        try {
-            //create a option to select space for Transacte fields
-            const param = { app: kintone.app.getId() };
-            const fields = await kintone.api("/k/v1/preview/app/form/layout","GET",param); // comment use try catch
-            fields.layout.forEach((getSpaceFields) => {
-              getSpaceFields.fields.forEach((getSpaceFieldCode) => {
-                if (getSpaceFieldCode.type === "SPACER") {
-                  $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(getSpaceFieldCode.elementId, getSpaceFieldCode.elementId));
-                }
-              });
-            });
+    async function setInitiative() {
 
-            //check if have been or not config
-            if (jQuery.isEmptyObject(CONF)) {
-              for (let k = 0; k < suporttedLangs.length; k++) {
-                let language = suporttedLangs[k].language;
-                $("select[name='language-selection']").append(new Option(language, language));
-              }
-
-              $("#table_language_list > tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list > tbody > tr")).eq(0);
-              $("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr")).eq(0);
-              setActionBtnForLangList();
-              setActionBtnForTranslateFields();
-
-            } else {
-
-              //todo setDefault from config function
-              const languageList = JSON.parse(CONF.language_list);
-              const translateEngine = JSON.parse(CONF.translate_engine);
-              const translateFields = JSON.parse(CONF.translate_fields);
-              $(translate_url).val(translateEngine.url);
-              $(header_1).val(translateEngine.headers[0].header);
-              $(header_2).val(translateEngine.headers[1].header);
-              $(header_3).val(translateEngine.headers[2].header);
-          
-              currentEngine = translateEngine.type
-              $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
-              $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
-              tran_direction = CONF.translate_direction;
-              setPreviousEngine();
-          
-              //check current engine
-              let getCurrentEngine = await checkEngine(currentEngine);
-              createLanguageSelectionList(getCurrentEngine)
-          
-              for (let i = 1; i <= languageList.length; i++) {
-                $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list tbody > tr").eq(i - 1));
-          
-                //set value from config to setting
-                $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection']`).val(languageList[i - 1].language);
-                $(`#table_language_list tbody tr:eq(${i})> td input[name='button_label']`).val(languageList[i - 1].button_label);
-                $(`#table_language_list tbody tr:eq(${i})> td input[name='lang_code']`).val(languageList[i - 1].lang_code);
-                $(`#table_language_list tbody tr:eq(${i})> td input[name='code_iso']`).val(languageList[i - 1].iso);
-              }
-          
-              //set value to default language and translate fields column
-              await reflection();
-              //set default language
-              $(`select[name='default_lang']`).val(CONF.default_language);
-          
-              //set value to translate fields
-              for (let i = 1; i <= translateFields.length; i++) {$("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr").eq(i - 1));
-          
-                $(`#table_translate_field tbody tr:eq(${i})> td input[name='item_code']`).val(translateFields[i - 1].item_code);
-                $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_space']`).val(translateFields[i - 1].space_element);
-          
-                //set value to translate fields table
-                $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_translate']`).each(function (index, field) {
-                  let optionVar = translateFields[i - 1].target_fields[index].field;
-                  $(field).val(optionVar).change();
+          try {
+              //create a option to select space for Transacte fields
+              const param = { app: kintone.app.getId() };
+              const fields = await kintone.api("/k/v1/preview/app/form/layout","GET",param);
+              fields.layout.forEach((getSpaceFields) => {
+                getSpaceFields.fields.forEach((getSpaceFieldCode) => {
+                  if (getSpaceFieldCode.type === "SPACER") {
+                    $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(getSpaceFieldCode.elementId, getSpaceFieldCode.elementId));
+                  }
                 });
+              });
+
+              //check if have been or not config
+              if (jQuery.isEmptyObject(CONF)) {
+                for (let k = 0; k < suporttedLangs.length; k++) {
+                  let language = suporttedLangs[k].language;
+                  $("select[name='language-selection']").append(new Option(language, language));
+                }
+
+                $("#table_language_list > tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list > tbody > tr")).eq(0);
+                $("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr")).eq(0);
+                setActionBtnForLangList();
+                setActionBtnForTranslateFields();
+
+              } else {
+
+                //todo setDefault from config function
+                const languageList = JSON.parse(CONF.language_list);
+                const translateEngine = JSON.parse(CONF.translate_engine);
+                const translateFields = JSON.parse(CONF.translate_fields);
+                $(translate_url).val(translateEngine.url);
+                $(header_1).val(translateEngine.headers[0].header);
+                $(header_2).val(translateEngine.headers[1].header);
+                $(header_3).val(translateEngine.headers[2].header);
+            
+                currentEngine = translateEngine.type
+                $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+                $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
+                tran_direction = CONF.translate_direction;
+                previous_engine = $("input[name='engine']:checked").val();
+
+            
+                //check current engine
+                let getCurrentEngine = await checkEngine(currentEngine);
+                createLanguageSelectionList([0] ,getCurrentEngine);
+                
+                for (let i = 1; i <= languageList.length; i++) {
+                  $("#table_language_list tbody > tr").eq(0).clone(true).insertAfter($("#table_language_list tbody > tr").eq(i - 1));
+                  
+                  //set value from config to setting
+                  $(`#table_language_list tbody tr:eq(${i})> td select[name='language-selection']`).val(languageList[i - 1].language);
+                  $(`#table_language_list tbody tr:eq(${i})> td input[name='button_label']`).val(languageList[i - 1].button_label);
+                  $(`#table_language_list tbody tr:eq(${i})> td input[name='lang_code']`).val(languageList[i - 1].lang_code);
+                  $(`#table_language_list tbody tr:eq(${i})> td input[name='code_iso']`).val(languageList[i - 1].iso);
+                }
+            
+                //set value to default language and translate fields column
+                await reflection();
+                //set default language
+                $(`select[name='default_lang']`).val(CONF.default_language);
+            
+                //set value to translate fields
+                for (let i = 1; i <= translateFields.length; i++) {$("#table_translate_field > tbody > tr").eq(0).clone(true).insertAfter($("#table_translate_field > tbody > tr").eq(i - 1));
+            
+                  $(`#table_translate_field tbody tr:eq(${i})> td input[name='item_code']`).val(translateFields[i - 1].item_code);
+                  $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_space']`).val(translateFields[i - 1].space_element);
+            
+                  //set value to translate fields table
+                  $(`#table_translate_field tbody tr:eq(${i})> td select[name='select_field_translate']`).each(function (index, field) {
+                    let optionVar = translateFields[i - 1].target_fields[index].field;
+                    $(field).val(optionVar).change();
+                  });
+                }
               }
-            }
-        } catch (error) {
-            alert(error);
-        }
-    }
+          } catch (error) {
+              alert(error);
+              return
+          }
+      }
 
     // set dropdown to select SINGLE_LINE_TEXT, RICH_TEXT, SUBTABLE, MULTI_LINE_TEXT field
     async function setFieldList() {
@@ -329,43 +333,45 @@ jQuery.noConflict();
     };
 
     // add new row in table setting
-    $(document).on("click", ".addRowLanguageList", function () {// comment change addList ==> tabel
+    $(document).on("click", ".addRowLanguageList", function () {
       // clone the row without its data
       let $newRow = $("#table_language_list tbody > tr").eq(0).clone(true);
       $(this).parent().parent().after($newRow);
       setActionBtnForLangList();
     });
 
-    $(document).on("click", ".addRowTranslateField", function () {// comment change addList_1 ==> tabel
+    $(document).on("click", ".addRowTranslateField", function () {
       let $newRowSpace = $("#table_translate_field > tbody > tr").eq(0).clone(true);
       $(this).parent().parent().after($newRowSpace);
       setActionBtnForTranslateFields();
     });
 
     // remove selected row in table setting
-    $(document).on("click", ".removeRowLanguageList", function () {// comment change removeList ==> tabel
+    $(document).on("click", ".removeRowLanguageList", function () {
       $(this).parent("td").parent("tr").remove();
       setActionBtnForLangList();
     });
 
     // remove selected row in table setting
-    $(document).on("click", ".removeRowTranslateField", function () {// comment change removeRowTranslateField ==> tabel
+    $(document).on("click", ".removeRowTranslateField", function () {
       $(this).parent("td").parent("tr").remove();
       setActionBtnForTranslateFields();
     });
 
     //when change language list
-    $(document).on("change","#table_language_list tbody > tr > td select[name='language-selection']", function () {
+    $(document).on("change","select[name='language-selection']", function () {
         let selectedLanguage = $(this).val();
         let rowIndex;
         if (selectedLanguage == "-----") {
            rowIndex = $(this).parents("tr").index() + 1;
-          $(`#table_language_list tbody > tr:nth-child(${rowIndex}) > td:nth-child(3) input[name='code_iso']`).val("");
+          $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='code_iso']`).val("");
+          $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='lang_code']`).val("");
+          $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='button_label']`).val("");
         } else {
           let languageList = suporttedLangs.filter(function (index) {
             return index.language === selectedLanguage;
           });
-          let setLanguageIso = languageList[0].code3;
+          let setLanguageIso = languageList[0].iso;
           let setLanguageCode = languageList[0].code;
 
           rowIndex = $(this).parents("tr").index() + 1;
@@ -375,7 +381,6 @@ jQuery.noConflict();
       }
     );
 
-    
     // Drag and Drop language list
     $("#table_language_list tbody > tr").on("dragstart", function (event) {
       $(this).addClass("dragging");
@@ -418,17 +423,24 @@ jQuery.noConflict();
     async function reflection() {
       let foundDuplicate = false;
 
-      //comment check language duplicated  the process is too complicated 
+      //check language duplicated  the process is too complicated 
       let targetValueCheck = [];
       let lang_list_count = $("#table_language_list tbody > tr").length;
       for (let j = 2; j <= lang_list_count; j++) {
-        if ($("#table_language_list tbody > tr:nth-child("+ j +") input[name='button_label']").val() == "") {
+        if ($("#table_language_list tbody > tr:nth-child("+ j +") select[name='language-selection'] option:selected").val() == "-----") {
+          Swal10.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please select the language!!",
+          });
+          return
+        }else if ($("#table_language_list tbody > tr:nth-child("+ j +") input[name='button_label']").val() == "") {
           Swal10.fire({
             icon: "error",
             title: "Oops...",
             text: "Please enter the Button label!!",
           });
-          foundDuplicate = true; // change to use return
+          return
         }
       }
 
@@ -441,7 +453,7 @@ jQuery.noConflict();
             title: "Oops...",
             text: "Your language list choices have the same language.!!",
           });
-          foundDuplicate = true; // change to use return
+          foundDuplicate = true;
         }
         else{
           targetValueCheck.push(targetValue);
@@ -555,7 +567,6 @@ jQuery.noConflict();
           let conditionForCheck = false;
           let ItemValueCheck = [];
           for (let k = 1; k < space_length; k++) {
-            // const space_index = k;
             const rowItemValue = $(`#table_translate_field tbody tr:eq(${k})> td input[type="text"]`).val();
   
               // Do check for null values or have the same value
@@ -644,7 +655,6 @@ jQuery.noConflict();
         );
       });
       }
-      
     });
 
     setInitiative();

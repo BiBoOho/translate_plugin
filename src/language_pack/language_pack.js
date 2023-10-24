@@ -4,1577 +4,1577 @@ let langPack = function () {
             {
               language: "Afrikaans",
               code: "af",
-              code3: "afr"
+              iso: "afr"
             },
             {
               language: "Albanian",
               code: "sq",
-              code3: "sqi"
+              iso: "sqi"
             },
             {
               language: "Amharic",
               code: "am",
-              code3: "amh"
+              iso: "amh"
             },
             {
               language: "Arabic",
               code: "ar",
-              code3: "ara"
+              iso: "ara"
             },
             {
               language: "Armenian",
               code: "hy",
-              code3: "hye"
+              iso: "hye"
             },
             {
               language: "Assamese",
               code: "as",
-              code3: "asm"
+              iso: "asm"
             },
             {
               language: "Aymara",
               code: "ay",
-              code3: "aym"
+              iso: "aym"
             },
             {
               language: "Azerbaijani",
               code: "az",
-              code3: "aze"
+              iso: "aze"
             },
             {
               language: "Bambara",
               code: "bm",
-              code3: "bam"
+              iso: "bam"
             },
             {
               language: "Basque",
               code: "eu",
-              code3: "eus"
+              iso: "eus"
             },
             {
               language: "Belarusian",
               code: "be",
-              code3: "bel"
+              iso: "bel"
             },
             {
               language: "Bengali",
               code: "bn",
-              code3: "ben"
+              iso: "ben"
             },
             {
               language: "Bhojpuri",
               code: "bho",
-              code3: "bho"
+              iso: "bho"
             },
             {
               language: "Bosnian",
               code: "bs",
-              code3: "bos"
+              iso: "bos"
             },
             {
               language: "Bulgarian",
               code: "bg",
-              code3: "bul"
+              iso: "bul"
             },
             {
               language: "Catalan",
               code: "ca",
-              code3: "cat"
+              iso: "cat"
             },
             {
               language: "Cebuano",
               code: "ceb",
-              code3: "ceb"
+              iso: "ceb"
             },
             {
                 language: "Chinese (Simplified)",
                 code: "zh-CN",
-                code3: "zho"
+                iso: "zho"
             },
             {
                 language: "Chinese (Traditional)",
                 code: "zh-TW",
-                code3: "zho"
+                iso: "zho"
             },
             {
                 language: "Corsican",
                 code: "co",
-                code3: "cos"
+                iso: "cos"
             },
             {
                 language: "Croatian",
                 code: "hr",
-                code3: "hrv"
+                iso: "hrv"
             },
             {
                 language: "Czech",
                 code: "cs",
-                code3: "ces"
+                iso: "ces"
             },
             {
                 language: "Danish",
                 code: "da",
-                code3: "dan"
+                iso: "dan"
             },
             {
                 language: "Dhivehi",
                 code: "dv",
-                code3: "div"
+                iso: "div"
             },
             {
                 language: "Dogri",
                 code: "doi",
-                code3: "doi"
+                iso: "doi"
             },
             {
                 language: "Dutch",
                 code: "nl",
-                code3: "nld"
+                iso: "nld"
             },
             {
                 language: "English",
                 code: "en",
-                code3: "eng"
+                iso: "eng"
             },
             {
                 language: "Esperanto",
                 code: "eo",
-                code3: "epo"
+                iso: "epo"
             },
             {
                 language: "Estonian",
                 code: "et",
-                code3: "est"
+                iso: "est"
             },
             {
                 language: "Ewe",
                 code: "ee",
-                code3: "ewe"
+                iso: "ewe"
             },
             {
                 language: "Philippines",
                 code: "fil",
-                code3: "fil"
+                iso: "fil"
             },
             {
                 language: "Finnish",
                 code: "fi",
-                code3: "fin"
+                iso: "fin"
             },
             {
                 language: "France",
                 code: "fr",
-                code3: "fra"
+                iso: "fra"
             },
             {
                 language: "Frisian",
                 code: "fy",
-                code3: "fry"
+                iso: "fry"
             },
             {
                 language: "Galician",
                 code: "gl",
-                code3: "glg"
+                iso: "glg"
             },
             {
                 language: "Georgian",
                 code: "ka",
-                code3: "kat"
+                iso: "kat"
             },
             {
                 language: "German",
                 code: "de",
-                code3: "deu"
+                iso: "deu"
             },
             {
                 language: "Greek",
                 code: "el",
-                code3: "ell"
+                iso: "ell"
             },
             {
                 language: "Guarani",
                 code: "gn",
-                code3: "grn"
+                iso: "grn"
             },
             {
                 language: "Gujarati",
                 code: "gu",
-                code3: "guj"
+                iso: "guj"
             },
             {
                 language: "Haitian Creole",
                 code: "ht",
-                code3: "hat"
+                iso: "hat"
             },
             {
                 language: "Hausa",
                 code: "ha",
-                code3: "hau"
+                iso: "hau"
             },
             {
                 language: "Hawaiian",
                 code: "haw",
-                code3: "haw"
+                iso: "haw"
             },
             {
                 language: "Hebrew",
                 code: "he",
-                code3: "heb"
+                iso: "heb"
             },
             {
                 language: "Hindi",
                 code: "hi",
-                code3: "hin"
+                iso: "hin"
             },
             {
                 language: "Hmong",
                 code: "hmn",
-                code3: "hmn"
+                iso: "hmn"
             },
             {
                 language: "Hungarian",
                 code: "hu",
-                code3: "hun"
+                iso: "hun"
             },{
                 language: 'Icelandic',
                 code: 'is',
-                code3: 'isl'
+                iso: 'isl'
             },
             {
                 language: 'Igbo',
                 code: 'ig',
-                code3: 'ibo'
+                iso: 'ibo'
             },
             {
                 language: 'Ilocano',
                 code: 'ilo',
-                code3: ''
+                iso: 'ilo'
             },
             {
                 language: 'Indonesian',
                 code: 'id',
-                code3: 'ind'
+                iso: 'ind'
             },
             {
                 language: 'Irish',
                 code: 'ga',
-                code3: 'gle'
+                iso: 'gle'
             },
             {
                 language: 'Italian',
                 code: 'it',
-                code3: 'ita'
+                iso: 'ita'
             },
             {
                 language: 'Japanese',
                 code: 'ja',
-                code3: 'jpn'
+                iso: 'jpn'
             },
             {
                 language: 'Javanese',
                 code: 'jv or jw',
-                code3: ''
+                iso: 'jav'
             },
             {
                 language: 'Kannada',
                 code: 'kn',
-                code3: 'kan'
+                iso: 'kan'
             },
             {
                 language: 'Kazakh',
                 code: 'kk',
-                code3: 'kaz'
+                iso: 'kaz'
             },
             {
                 language: 'Khmer',
                 code: 'km',
-                code3: 'khm'
+                iso: 'khm'
             },
             {
                 language: 'Kinyarwanda',
                 code: 'rw',
-                code3: 'kin'
+                iso: 'kin'
             },
             {
                 language: 'Konkani',
-                code: 'gom',
-                code3: ''
+                code: 'kok',
+                iso: 'kok'
             },
             {
                 language: 'Korean',
                 code: 'ko',
-                code3: 'kor'
+                iso: 'kor'
             },
             {
                 language: 'Krio',
                 code: 'kri',
-                code3: ''
+                iso: ''
             },
             {
                 language: 'Kurdish',
                 code: 'ku',
-                code3: 'kur'
+                iso: 'kur'
             },
             {
                 language: 'Kurdish (Sorani)',
-                code: 'ckb',
-                code3: ''
+                code: 'kur',
+                iso: 'kur'
             },
             {
                 language: 'Kyrgyz',
                 code: 'ky',
-                code3: 'kir'
+                iso: 'kir'
             },
             {
                 language: 'Lao',
                 code: 'lo',
-                code3: 'lao'
+                iso: 'lao'
             },
             {
                 language: 'Latin',
                 code: 'la',
-                code3: 'lat'
+                iso: 'lat'
             },
             {
                 language: 'Latvian',
                 code: 'lv',
-                code3: 'lav'
+                iso: 'lav'
             },
             {
                 language: 'Lingala',
                 code: 'ln',
-                code3: 'lin'
+                iso: 'lin'
             },
             {
                 language: 'Lithuanian',
                 code: 'lt',
-                code3: 'lit'
+                iso: 'lit'
             },
             {
                 language: 'Luganda',
                 code: 'lg',
-                code3: 'lug'
+                iso: 'lug'
             },
             {
                 language: 'Luxembourgish',
                 code: 'lb',
-                code3: 'ltz'
+                iso: 'ltz'
             },
             {
                 language: 'Macedonian',
                 code: 'mk',
-                code3: 'mkd'
+                iso: 'mkd'
             },
             {
                 language: 'Maithili',
                 code: 'mai',
-                code3: 'mai'
+                iso: 'mai'
             },
             {
                 language: 'Malagasy',
                 code: 'mg',
-                code3: 'mlg'
+                iso: 'mlg'
             },
             {
                 language: 'Malay',
                 code: 'ms',
-                code3: 'msa'
+                iso: 'msa'
             },
             {
                 language: 'Malayalam',
                 code: 'ml',
-                code3: 'mal'
+                iso: 'mal'
             },
             {
                 language: 'Maltese',
                 code: 'mt',
-                code3: 'mlt'
+                iso: 'mlt'
             },
             {
                 language: 'Maori',
                 code: 'mi',
-                code3: 'mri'
+                iso: 'mri'
             },
             {
                 language: 'Marathi',
                 code: 'mr',
-                code3: 'mar'
+                iso: 'mar'
             },
             {
                 language: 'Meiteilon (Manipuri)',
                 code: 'mni-Mtei',
-                code3: ''
+                iso: ''
             },
             {
                 language: 'Mizo',
                 code: 'lus',
-                code3: ''
+                iso: ''
             },
             {
                 language: 'Mongolian',
                 code: 'mn',
-                code3: 'mon'
+                iso: 'mon'
             },
             {
                 language: 'Myanmar (Burmese)',
                 code: 'my',
-                code3: 'mya'
+                iso: 'mya'
             },
             {
                 language: 'Nepali',
                 code: 'ne',
-                code3: 'nep'
+                iso: 'nep'
             },
             {
                 language: 'Norwegian',
                 code: 'no',
-                code3: 'nor'
+                iso: 'nor'
             },
             {
                 language: 'Nyanja (Chichewa)',
                 code: 'ny',
-                code3: 'nya'
+                iso: 'nya'
             },
             {
                 language: 'Odia (Oriya)',
                 code: 'or',
-                code3: 'ori'
+                iso: 'ori'
             },
             {
                 language: 'Oromo',
                 code: 'om',
-                code3: 'orm'
+                iso: 'orm'
             },
             {
                 language: 'Pashto',
                 code: 'ps',
-                code3: 'pus'
+                iso: 'pus'
             },
             {
                 language: 'Persian',
                 code: 'fa',
-                code3: 'fas'
+                iso: 'fas'
             },
             {
                 language: 'Polish',
                 code: 'pl',
-                code3: 'pol'
+                iso: 'pol'
             },
             {
                 language: 'Portuguese (Portugal, Brazil)',
                 code: 'pt',
-                code3: 'por'
+                iso: 'por'
             },
             {
                 language: 'Punjabi',
                 code: 'pa',
-                code3: 'pan'
+                iso: 'pan'
             },
             {
                 language: 'Quechua',
                 code: 'qu',
-                code3: 'que'
+                iso: 'que'
             },
             {
                 language: 'Romanian',
                 code: 'ro',
-                code3: 'ron'
+                iso: 'ron'
             },
             {
                 language: 'Russian',
                 code: 'ru',
-                code3: 'rus'
+                iso: 'rus'
             },
             {
                 language: 'Samoan',
                 code: 'sm',
-                code3: 'smo'
+                iso: 'smo'
             },
             {
                 language: 'Sanskrit',
                 code: 'sa',
-                code3: 'san'
+                iso: 'san'
             },
             {
                 language: 'Scots Gaelic',
                 code: 'gd',
-                code3: 'gla'
+                iso: 'gla'
             },
             {
                 language: 'Sepedi',
                 code: 'nso',
-                code3: ''
+                iso: ''
             },
             {
                 language: 'Serbian',
                 code: 'sr',
-                code3: 'srp'
+                iso: 'srp'
             },
             {
                 language: 'Sesotho',
                 code: 'st',
-                code3: 'sot'
+                iso: 'sot'
             },
             {
                 language: 'Shona',
                 code: 'sn',
-                code3: 'sna'
+                iso: 'sna'
             },
             {
                 language: 'Sindhi',
                 code: 'sd',
-                code3: 'snd'
+                iso: 'snd'
             },
             {
                 language: 'Sinhala (Sinhalese)',
                 code: 'si',
-                code3: 'sin'
+                iso: 'sin'
             },
             {
                 language: 'Slovak',
                 code: 'sk',
-                code3: 'slk'
+                iso: 'slk'
             },
             {
                 language: 'Slovenian',
                 code: 'sl',
-                code3: 'slv'
+                iso: 'slv'
             },
             {
                 language: 'Somali',
                 code: 'so',
-                code3: 'som'
+                iso: 'som'
             },
             {
                 language: 'Spanish',
                 code: 'es',
-                code3: 'spa'
+                iso: 'spa'
             },
             {
                 language: 'Sundanese',
                 code: 'su',
-                code3: 'sun'
+                iso: 'sun'
             },
             {
                 language: 'Swahili',
                 code: 'sw',
-                code3: 'swa'
+                iso: 'swa'
             },
             {
                 language: 'Swedish',
                 code: 'sv',
-                code3: 'swe'
+                iso: 'swe'
             },
             {
                 language: 'Tagalog (Filipino)',
                 code: 'tl',
-                code3: 'tgl'
+                iso: 'tgl'
             },
             {
                 language: 'Tajik',
                 code: 'tg',
-                code3: 'tgk'
+                iso: 'tgk'
             },
             {
                 language: 'Tamil',
                 code: 'ta',
-                code3: 'tam'
+                iso: 'tam'
             },
             {
                 language: 'Tatar',
                 code: 'tt',
-                code3: 'tat'
+                iso: 'tat'
             },
             {
                 language: 'Telugu',
                 code: 'te',
-                code3: 'tel'
+                iso: 'tel'
             },
             {
                 language: 'Thai',
                 code: 'th',
-                code3: 'tha'
+                iso: 'tha'
             },
             {
                 language: 'Tigrinya',
                 code: 'ti',
-                code3: 'tir'
+                iso: 'tir'
             },
             {
                 language: 'Tsonga',
                 code: 'ts',
-                code3: 'tso'
+                iso: 'tso'
             },
             {
                 language: 'Turkish',
                 code: 'tr',
-                code3: 'tur'
+                iso: 'tur'
             },
             {
                 language: 'Turkmen',
                 code: 'tk',
-                code3: 'tuk'
+                iso: 'tuk'
             },
             {
                 language: 'Twi (Akan)',
                 code: 'ak',
-                code3: ''
+                iso: ''
             },
             {
                 language: 'Ukrainian',
                 code: 'uk',
-                code3: 'ukr'
+                iso: 'ukr'
             },
             {
                 language: 'Urdu',
                 code: 'ur',
-                code3: 'urd'
+                iso: 'urd'
             },
             {
                 language: 'Uyghur',
                 code: 'ug',
-                code3: 'uig'
+                iso: 'uig'
             },
             {
                 language: 'Uzbek',
                 code: 'uz',
-                code3: 'uzb'
+                iso: 'uzb'
             },
             {
                 language: 'Vietnamese',
                 code: 'vi',
-                code3: 'vie'
+                iso: 'vie'
             },
             {
                 language: 'Welsh',
                 code: 'cy',
-                code3: 'cym'
+                iso: 'cym'
             },
             {
                 language: 'Xhosa',
                 code: 'xh',
-                code3: 'xho'
+                iso: 'xho'
             },
             {
                 language: 'Yiddish',
                 code: 'yi',
-                code3: 'yid'
+                iso: 'yid'
             },
             {
                 language: 'Yoruba',
                 code: 'yo',
-                code3: 'yor'
+                iso: 'yor'
             },
             {
                 language: 'Zulu',
                 code: 'zu',
-                code3: 'zul'
+                iso: 'zul'
             }
-],
+          ],
         deepl_api : [
             {
               language: "Bulgarian",
               code: "bg",
-              code3: "bul"
+              iso: "bul"
             },
             {
               language: "Chinese",
               code: "zh",
-              code3: "zho"
+              iso: "zho"
             },
             {
               language: "Czech",
               code: "cs",
-              code3: "ces"
+              iso: "ces"
             },
             {
               language: "Danish",
               code: "da",
-              code3: "dan"
+              iso: "dan"
             },
             {
               language: "Dutch",
               code: "nl",
-              code3: "nld"
+              iso: "nld"
             },
             {
               language: "English",
               code: "en",
-              code3: "eng"
+              iso: "eng"
             },
             {
               language: "Estonian",
               code: "et",
-              code3: "est"
+              iso: "est"
             },
             {
               language: "Finnish",
               code: "fi",
-              code3: "fin"
+              iso: "fin"
             },
             {
               language: "French",
               code: "fr",
-              code3: "fra"
+              iso: "fra"
             },
             {
               language: "German",
               code: "de",
-              code3: "deu"
+              iso: "deu"
             },
             {
               language: "Greek",
               code: "el",
-              code3: "ell"
+              iso: "ell"
             },
             {
               language: "Hungarian",
               code: "hu",
-              code3: "hun"
+              iso: "hun"
             },
             {
               language: "Indonesian",
               code: "id",
-              code3: "ind"
+              iso: "ind"
             },
             {
               language: "Italian",
               code: "it",
-              code3: "ita"
+              iso: "ita"
             },
             {
               language: "Japanese",
               code: "ja",
-              code3: "jpn"
+              iso: "jpn"
             },
             {
               language: "Korean",
               code: "ko",
-              code3: "kor"
+              iso: "kor"
             },
             {
               language: "Latvian",
               code: "lv",
-              code3: "lav"
+              iso: "lav"
             },
             {
               language: "Lithuanian",
               code: "lt",
-              code3: "lit"
+              iso: "lit"
             },
             {
               language: "Norwegian",
               code: "no",
-              code3: "nor"
+              iso: "nor"
             },
             {
               language: "Polish",
               code: "pl",
-              code3: "pol"
+              iso: "pol"
             },
             {
               language: "Portuguese",
               code: "pt",
-              code3: "por"
+              iso: "por"
             },
             {
               language: "Romanian",
               code: "ro",
-              code3: "ron"
+              iso: "ron"
             },
             {
               language: "Russian",
               code: "ru",
-              code3: "rus"
+              iso: "rus"
             },
             {
               language: "Slovak",
               code: "sk",
-              code3: "slk"
+              iso: "slk"
             },
             {
               language: "Slovenian",
               code: "sl",
-              code3: "slv"
+              iso: "slv"
             },
             {
               language: "Spanish",
               code: "es",
-              code3: "spa"
+              iso: "spa"
             },
             {
               language: "Swedish",
               code: "sv",
-              code3: "swe"
+              iso: "swe"
             },
             {
               language: "Turkish",
               code: "tr",
-              code3: "tur"
+              iso: "tur"
             },
             {
               language: "Ukrainian",
               code: "uk",
-              code3: "ukr"
+              iso: "ukr"
             }
           ],
         my_memory_api : [
             {
               language: "Afrikaans",
               code: "af",
-              code3: "afr"
+              iso: "afr"
             },
             {
               language: "Albanian",
               code: "sq",
-              code3: "sqi"
+              iso: "sqi"
             },
             {
               language: "Amharic",
               code: "am",
-              code3: "amh"
+              iso: "amh"
             },
             {
               language: "Arabic",
               code: "ar",
-              code3: "ara"
+              iso: "ara"
             },
             {
               language: "Armenian",
               code: "hy",
-              code3: "hye"
+              iso: "hye"
             },
             {
               language: "Azerbaijani",
               code: "az",
-              code3: "aze"
+              iso: "aze"
             },
             {
               language: "Bajan",
               code: "bjs",
-              code3: "bjs"
+              iso: "bjs"
             },
             {
               language: "Balkan Gipsy",
               code: "rom",
-              code3: "rom"
+              iso: "rom"
             },
             {
               language: "Basque",
               code: "eu",
-              code3: "eus"
+              iso: "eus"
             },
             {
               language: "Bemba",
               code: "bem",
-              code3: "bem"
+              iso: "bem"
             },
             {
               language: "Bengali",
               code: "bn",
-              code3: "ben"
+              iso: "ben"
             },
             {
               language: "Bielarus",
               code: "be",
-              code3: "bel"
+              iso: "bel"
             },
             {
               language: "Bislama",
               code: "bi",
-              code3: "bis"
+              iso: "bis"
             },
             {
               language: "Bosnian",
               code: "bs",
-              code3: "bos"
+              iso: "bos"
             },
             {
               language: "Breton",
               code: "br",
-              code3: "bre"
+              iso: "bre"
             },
             {
               language: "Bulgarian",
               code: "bg",
-              code3: "bul"
+              iso: "bul"
             },
             {
               language: "Burmese",
               code: "my",
-              code3: "mya"
+              iso: "mya"
             },
             {
               language: "Catalan",
               code: "ca",
-              code3: "cat"
+              iso: "cat"
             },
             {
               language: "Cebuano",
               code: "ceb",
-              code3: "ceb"
+              iso: "ceb"
             },
             {
               language: "Chamorro",
               code: "ch",
-              code3: "cha"
+              iso: "cha"
             },
             {
               language: "Chinese (Simplified)",
               code: "zh",
-              code3: "zho"
+              iso: "zho"
             },
             {
               language: "Chinese Traditional",
               code: "zh-TW",
-              code3: "zho-TW"
+              iso: "zho-TW"
             },
             {
               language: "Comorian (Ngazidja)",
               code: "swb",
-              code3: "swb"
+              iso: "swb"
             },
             {
               language: "Coptic",
               code: "cop",
-              code3: "cop"
+              iso: "cop"
             },
             {
               language: "Creole English (Antigua and Barbuda)",
               code: "aig",
-              code3: "aig"
+              iso: "aig"
             },
             {
               language: "Creole English (Bahamas)",
               code: "bah",
-              code3: "bah"
+              iso: "bah"
             },
             {
               language: "Creole English (Grenadian)",
               code: "gcl",
-              code3: "gcl"
+              iso: "gcl"
             },
             {
               language: "Creole English (Guyanese)",
               code: "gyn",
-              code3: "gyn"
+              iso: "gyn"
             },
             {
               language: "Creole English (Jamaican)",
               code: "jam",
-              code3: "jam"
+              iso: "jam"
             },
             {
               language: "Creole English (Vincentian)",
               code: "svc",
-              code3: "svc"
+              iso: "svc"
             },
             {
               language: "Creole English (Virgin Islands)",
               code: "vic",
-              code3: "vic"
+              iso: "vic"
             },
             {
               language: "Creole French (Haitian)",
               code: "ht",
-              code3: "hat"
+              iso: "hat"
             },
             {
               language: "Creole French (Saint Lucian)",
               code: "acf",
-              code3: "acf"
+              iso: "acf"
             },
             {
               language: "Creole French (Seselwa)",
               code: "crs",
-              code3: "crs"
+              iso: "crs"
             },
             {
               language: "Creole Portuguese (Upper Guinea)",
               code: "pov",
-              code3: "pov"
+              iso: "pov"
             },
             {
               language: "Croatian",
               code: "hr",
-              code3: "hrv"
+              iso: "hrv"
             },
             {
-            language: "Czech",
-            code: "cs",
-            code3: "ces"
+              language: "Czech",
+              code: "cs",
+              iso: "ces"
             },
             {
-            language: "Danish",
-            code: "da",
-            code3: "dan"
+              language: "Danish",
+              code: "da",
+              iso: "dan"
             },
             {
-            language: "Dutch",
-            code: "nl",
-            code3: "nld"
+              language: "Dutch",
+              code: "nl",
+              iso: "nld"
             },
             {
-            language: "Dzongkha",
-            code: "dz",
-            code3: "dzo"
+              language: "Dzongkha",
+              code: "dz",
+              iso: "dzo"
             },
             {
-            language: "English",
-            code: "en",
-            code3: "eng"
+              language: "English",
+              code: "en",
+              iso: "eng"
             },
             {
-            language: "Esperanto",
-            code: "eo",
-            code3: "epo"
+              language: "Esperanto",
+              code: "eo",
+              iso: "epo"
             },
             {
-            language: "Estonian",
-            code: "et",
-            code3: "est"
+              language: "Estonian",
+              code: "et",
+              iso: "est"
             },
             {
-            language: "Fanagalo",
-            code: "fng",
-            code3: "fng"
+              language: "Fanagalo",
+              code: "fng",
+              iso: "fng"
             },
             {
-            language: "Faroese",
-            code: "fo",
-            code3: "fao"
+              language: "Faroese",
+              code: "fo",
+              iso: "fao"
             },
             {
-            language: "Finnish",
-            code: "fi",
-            code3: "fin"
+              language: "Finnish",
+              code: "fi",
+              iso: "fin"
             },
             {
-            language: "French",
-            code: "fr",
-            code3: "fra"
+              language: "French",
+              code: "fr",
+              iso: "fra"
             },
             {
-            language: "Galician",
-            code: "gl",
-            code3: "glg"
+              language: "Galician",
+              code: "gl",
+              iso: "glg"
             },
             {
-            language: "Georgian",
-            code: "ka",
-            code3: "kat"
+              language: "Georgian",
+              code: "ka",
+              iso: "kat"
             },
             {
-            language: "German",
-            code: "de",
-            code3: "deu"
+              language: "German",
+              code: "de",
+              iso: "deu"
             },
             {
-            language: "Greek",
-            code: "el",
-            code3: "ell"
+              language: "Greek",
+              code: "el",
+              iso: "ell"
             },
             {
-            language: "Greek (Classical)",
-            code: "grc",
-            code3: "grc"
+              language: "Greek (Classical)",
+              code: "grc",
+              iso: "grc"
             },
             {
-            language: "Gujarati",
-            code: "gu",
-            code3: "guj"
+              language: "Gujarati",
+              code: "gu",
+              iso: "guj"
             },
             {
-            language: "Hausa",
-            code: "ha",
-            code3: "hau"
+              language: "Hausa",
+              code: "ha",
+              iso: "hau"
             },
             {
-            language: "Hawaiian",
-            code: "haw",
-            code3: "haw"
+              language: "Hawaiian",
+              code: "haw",
+              iso: "haw"
             },
             {
-            language: "Hebrew",
-            code: "he",
-            code3: "heb"
+              language: "Hebrew",
+              code: "he",
+              iso: "heb"
             },
             {
-            language: "Hindi",
-            code: "hi",
-            code3: "hin"
+              language: "Hindi",
+              code: "hi",
+              iso: "hin"
             },
             {
-            language: "Hungarian",
-            code: "hu",
-            code3: "hun"
+              language: "Hungarian",
+              code: "hu",
+              iso: "hun"
             },
             {
-            language: "Icelandic",
-            code: "is",
-            code3: "isl"
+              language: "Icelandic",
+              code: "is",
+              iso: "isl"
             },
             {
-            language: "Indonesian",
-            code: "id",
-            code3: "ind"
+              language: "Indonesian",
+              code: "id",
+              iso: "ind"
             },
             {
-            language: "Inuktitut (Greenlandic)",
-            code: "iu",
-            code3: "iku"
+              language: "Inuktitut (Greenlandic)",
+              code: "iu",
+              iso: "iku"
             },
             {
-            language: "Irish Gaelic",
-            code: "ga",
-            code3: "gle"
+              language: "Irish Gaelic",
+              code: "ga",
+              iso: "gle"
             },
             {
-            language: "Italian",
-            code: "it",
-            code3: "ita"
+              language: "Italian",
+              code: "it",
+              iso: "ita"
             },
             {
-            language: "Japanese",
-            code: "ja",
-            code3: "jpn"
+              language: "Japanese",
+              code: "ja",
+              iso: "jpn"
             },
             {
-            language: "Javanese",
-            code: "jv",
-            code3: "jav"
+              language: "Javanese",
+              code: "jv",
+              iso: "jav"
             },
             {
-            language: "Kabuverdianu",
-            code: "kea",
-            code3: "kea"
+              language: "Kabuverdianu",
+              code: "kea",
+              iso: "kea"
             },
             {
-            language: "Kabylian",
-            code: "kab",
-            code3: "kab"
+              language: "Kabylian",
+              code: "kab",
+              iso: "kab"
             },
             {
-            language: "Kannada",
-            code: "kn",
-            code3: "kan"
+              language: "Kannada",
+              code: "kn",
+              iso: "kan"
             },
             {
-            language: "Kazakh",
-            code: "kk",
-            code3: "kaz"
+              language: "Kazakh",
+              code: "kk",
+              iso: "kaz"
             },
             {
-            language: "Khmer",
-            code: "km",
-            code3: "khm"
+              language: "Khmer",
+              code: "km",
+              iso: "khm"
             },
             {
-            language: "Kinyarwanda",
-            code: "rw",
-            code3: "kin"
+              language: "Kinyarwanda",
+              code: "rw",
+              iso: "kin"
             },
             {
-            language: "Kirundi",
-            code: "rn",
-            code3: "run"
+              language: "Kirundi",
+              code: "rn",
+              iso: "run"
             },
             {
-            language: "Korean",
-            code: "ko",
-            code3: "kor"
+              language: "Korean",
+              code: "ko",
+              iso: "kor"
             },
             {
-            language: "Kurdish",
-            code: "ku",
-            code3: "kur"
+              language: "Kurdish",
+              code: "ku",
+              iso: "kur"
             },
             {
-                language: "Kurdish Sorani",
-                code2: "ckb",
-                code3: "ckb"
-              },
-              {
-                language: "Kyrgyz",
-                code2: "ky",
-                code3: "kir"
-              },
-              {
-                language: "Lao",
-                code2: "lo",
-                code3: "lao"
-              },
-              {
-                language: "Latin",
-                code2: "la",
-                code3: "lat"
-              },
-              {
-                language: "Latvian",
-                code2: "lv",
-                code3: "lav"
-              },
-              {
-                language: "Lithuanian",
-                code2: "lt",
-                code3: "lit"
-              },
-              {
-                language: "Luxembourgish",
-                code2: "lb",
-                code3: "ltz"
-              },
-              {
-                language: "Macedonian",
-                code2: "mk",
-                code3: "mkd"
-              },
-              {
-                language: "Malagasy",
-                code2: "mg",
-                code3: "mlg"
-              },
-              {
-                language: "Malay",
-                code2: "ms",
-                code3: "msa"
-              },
-              {
-                language: "Maldivian",
-                code2: "dv",
-                code3: "div"
-              },
-              {
-                language: "Maltese",
-                code2: "mt",
-                code3: "mlt"
-              },
-              {
-                language: "Manx Gaelic",
-                code2: "gv",
-                code3: "glv"
-              },
-              {
-                language: "Maori",
-                code2: "mi",
-                code3: "mri"
-              },
-              {
-                language: "Marshallese",
-                code2: "mh",
-                code3: "mah"
-              },
-              {
-                language: "Mende",
-                code2: "men",
-                code3: "men"
-              },
-              {
-                language: "Mongolian",
-                code2: "mn",
-                code3: "mon"
-              },
-              {
-                language: "Morisyen",
-                code2: "mfe",
-                code3: "mfe"
-              },
-              {
-                language: "Nepali",
-                code2: "ne",
-                code3: "nep"
-              },
-              {
-                language: "Niuean",
-                code2: "niu",
-                code3: "niu"
-              },
-              {
-                language: "Norwegian",
-                code2: "no",
-                code3: "nor"
-              },
-              {
-                language: "Nyanja",
-                code2: "ny",
-                code3: "nya"
-              },
-              {
-                language: "Pakistani",
-                code2: "", // No specific code found
-                code3: "" // No specific code found
-              },
-              {
-                language: "Palauan",
-                code2: "pau",
-                code3: "pau"
-              },
-              {
-                language: "Panjabi",
-                code2: "pa",
-                code3: "pan"
-              },
-              {
-                language: "Papiamentu",
-                code2: "pap",
-                code3: "pap"
-              },
-              {
-                language: "Pashto",
-                code2: "ps",
-                code3: "pus"
-              },
-              {
-                language: "Persian",
-                code2: "fa",
-                code3: "fas"
-              },
-              {
-                language: "Pijin",
-                code2: "pis",
-                code3: "pis"
-              },
-              {
-                language: "Polish",
-                code2: "pl",
-                code3: "pol"
-              },
-              {
-                language: "Portuguese",
-                code2: "pt",
-                code3: "por"
-              },
-              {
-                language: "Potawatomi",
-                code2: "pot",
-                code3: "pot"
-                },
-                {
-                  language: "Quechua",
-                  code2: "qu",
-                  code3: "que"
-                },
-                {
-                  language: "Romanian",
-                  code2: "ro",
-                  code3: "ron"
-                },
-                {
-                  language: "Russian",
-                  code2: "ru",
-                  code3: "rus"
-                },
-                {
-                  language: "Samoan",
-                  code2: "sm",
-                  code3: "smo"
-                },
-                {
-                  language: "Sango",
-                  code2: "sg",
-                  code3: "sag"
-                },
-                {
-                  language: "Scots Gaelic",
-                  code2: "gd",
-                  code3: "gla"
-                },
-                {
-                  language: "Serbian",
-                  code2: "sr",
-                  code3: "srp"
-                },
-                {
-                  language: "Shona",
-                  code2: "sn",
-                  code3: "sna"
-                },
-                {
-                  language: "Sinhala",
-                  code2: "si",
-                  code3: "sin"
-                },
-                {
-                  language: "Slovak",
-                  code2: "sk",
-                  code3: "slk"
-                },
-                {
-                  language: "Slovenian",
-                  code2: "sl",
-                  code3: "slv"
-                },
-                {
-                  language: "Somali",
-                  code2: "so",
-                  code3: "som"
-                },
-                {
-                  language: "Sotho, Southern",
-                  code2: "st",
-                  code3: "sot"
-                },
-                {
-                  language: "Spanish",
-                  code2: "es",
-                  code3: "spa"
-                },
-                {
-                  language: "Sranan Tongo",
-                  code2: "srn",
-                  code3: "srn"
-                },
-                {
-                  language: "Swahili",
-                  code2: "sw",
-                  code3: "swa"
-                },
-                {
-                  language: "Swedish",
-                  code2: "sv",
-                  code3: "swe"
-                },
-                {
-                  language: "Swiss German",
-                  code2: "gsw",
-                  code3: "gsw"
-                },
-                {
-                  language: "Syriac (Aramaic)",
-                  code2: "syr",
-                  code3: "syr"
-                },
-                {
-                  language: "Tagalog",
-                  code2: "tl",
-                  code3: "tgl"
-                },
-                {
-                  language: "Tajik",
-                  code2: "tg",
-                  code3: "tgk"
-                },
-                {
-                  language: "Tamashek (Tuareg)",
-                  code2: "tmh",
-                  code3: "tmh"
-                },
-                {
-                  language: "Tamil",
-                  code2: "ta",
-                  code3: "tam"
-                },
-                {
-                  language: "Telugu",
-                  code2: "te",
-                  code3: "tel"
-                },
-                {
-                  language: "Tetum",
-                  code2: "tet",
-                  code3: "tet"
-                },
-                {
-                  language: "Thai",
-                  code2: "th",
-                  code3: "tha"
-                },
-                {
-                  language: "Tibetan",
-                  code2: "bo",
-                  code3: "bod"
-                },
-                {
-                  language: "Tigrinya",
-                  code2: "ti",
-                  code3: "tir"
-                },
-                {
-                  language: "Tok Pisin",
-                  code2: "tpi",
-                  code3: "tpi"
-                },
-                {
-                  language: "Tokelauan",
-                  code2: "tkl",
-                  code3: "tkl"
-                },
-                {
-                  language: "Tongan",
-                  code2: "to",
-                  code3: "ton"
-                },
-                {
-                  language: "Tswana",
-                  code2: "tn",
-                  code3: "tsn"
-                },
-                {
-                  language: "Turkish",
-                  code2: "tr",
-                  code3: "tur"
-                },
-                {
-                  language: "Turkmen",
-                  code2: "tk",
-                  code3: "tuk"
-                },
-                {
-                  language: "Tuvaluan",
-                  code2: "tvl",
-                  code3: "tvl"
-                },
-                {
-                  language: "Ukrainian",
-                  code2: "uk",
-                  code3: "ukr"
-                },
-                {
-                  language: "Uma",
-                  code2: "ppk",
-                  code3: "ppk"
-                },
-                {
-                  language: "Uzbek",
-                  code2: "uz",
-                  code3: "uzb"
-                },
-                {
-                  language: "Vietnamese",
-                  code2: "vi",
-                  code3: "vie"
-                },
-                {
-                  language: "Wallisian",
-                  code2: "wls",
-                  code3: "wls"
-                },
-                {
-                  language: "Welsh",
-                  code2: "cy",
-                  code3: "cym"
-                },
-                {
-                  language: "Wolof",
-                  code2: "wo",
-                  code3: "wol"
-                },
-                {
-                  language: "Xhosa",
-                  code2: "xh",
-                  code3: "xho"
-                },
-                {
-                  language: "Yiddish",
-                  code2: "yi",
-                  code3: "yid"
-                },
-                {
-                  language: "Zulu",
-                  code2: "zu",
-                  code3: "zul"
-                }
-         ]
+              language: "Kurdish Sorani",
+              code2: "ckb",
+              iso: "ckb"
+            },
+            {
+              language: "Kyrgyz",
+              code2: "ky",
+              iso: "kir"
+            },
+            {
+              language: "Lao",
+              code2: "lo",
+              iso: "lao"
+            },
+            {
+              language: "Latin",
+              code2: "la",
+              iso: "lat"
+            },
+            {
+              language: "Latvian",
+              code2: "lv",
+              iso: "lav"
+            },
+            {
+              language: "Lithuanian",
+              code2: "lt",
+              iso: "lit"
+            },
+            {
+              language: "Luxembourgish",
+              code2: "lb",
+              iso: "ltz"
+            },
+            {
+              language: "Macedonian",
+              code2: "mk",
+              iso: "mkd"
+            },
+            {
+              language: "Malagasy",
+              code2: "mg",
+              iso: "mlg"
+            },
+            {
+              language: "Malay",
+              code2: "ms",
+              iso: "msa"
+            },
+            {
+              language: "Maldivian",
+              code2: "dv",
+              iso: "div"
+            },
+            {
+              language: "Maltese",
+              code2: "mt",
+              iso: "mlt"
+            },
+            {
+              language: "Manx Gaelic",
+              code2: "gv",
+              iso: "glv"
+            },
+            {
+              language: "Maori",
+              code2: "mi",
+              iso: "mri"
+            },
+            {
+              language: "Marshallese",
+              code2: "mh",
+              iso: "mah"
+            },
+            {
+              language: "Mende",
+              code2: "men",
+              iso: "men"
+            },
+            {
+              language: "Mongolian",
+              code2: "mn",
+              iso: "mon"
+            },
+            {
+              language: "Morisyen",
+              code2: "mfe",
+              iso: "mfe"
+            },
+            {
+              language: "Nepali",
+              code2: "ne",
+              iso: "nep"
+            },
+            {
+              language: "Niuean",
+              code2: "niu",
+              iso: "niu"
+            },
+            {
+              language: "Norwegian",
+              code2: "no",
+              iso: "nor"
+            },
+            {
+              language: "Nyanja",
+              code2: "ny",
+              iso: "nya"
+            },
+            {
+              language: "Pakistani",
+              code2: "", // No specific code found
+              iso: "" // No specific code found
+            },
+            {
+              language: "Palauan",
+              code2: "pau",
+              iso: "pau"
+            },
+            {
+              language: "Panjabi",
+              code2: "pa",
+              iso: "pan"
+            },
+            {
+              language: "Papiamentu",
+              code2: "pap",
+              iso: "pap"
+            },
+            {
+              language: "Pashto",
+              code2: "ps",
+              iso: "pus"
+            },
+            {
+              language: "Persian",
+              code2: "fa",
+              iso: "fas"
+            },
+            {
+              language: "Pijin",
+              code2: "pis",
+              iso: "pis"
+            },
+            {
+              language: "Polish",
+              code2: "pl",
+              iso: "pol"
+            },
+            {
+              language: "Portuguese",
+              code2: "pt",
+              iso: "por"
+            },
+            {
+              language: "Potawatomi",
+              code2: "pot",
+              iso: "pot"
+            },
+            {
+              language: "Quechua",
+              code2: "qu",
+              iso: "que"
+            },
+            {
+              language: "Romanian",
+              code2: "ro",
+              iso: "ron"
+            },
+            {
+              language: "Russian",
+              code2: "ru",
+              iso: "rus"
+            },
+            {
+              language: "Samoan",
+              code2: "sm",
+              iso: "smo"
+            },
+            {
+              language: "Sango",
+              code2: "sg",
+              iso: "sag"
+            },
+            {
+              language: "Scots Gaelic",
+              code2: "gd",
+              iso: "gla"
+            },
+            {
+              language: "Serbian",
+              code2: "sr",
+              iso: "srp"
+            },
+            {
+              language: "Shona",
+              code2: "sn",
+              iso: "sna"
+            },
+            {
+              language: "Sinhala",
+              code2: "si",
+              iso: "sin"
+            },
+            {
+              language: "Slovak",
+              code2: "sk",
+              iso: "slk"
+            },
+            {
+              language: "Slovenian",
+              code2: "sl",
+              iso: "slv"
+            },
+            {
+              language: "Somali",
+              code2: "so",
+              iso: "som"
+            },
+            {
+              language: "Sotho, Southern",
+              code2: "st",
+              iso: "sot"
+            },
+            {
+              language: "Spanish",
+              code2: "es",
+              iso: "spa"
+            },
+            {
+              language: "Sranan Tongo",
+              code2: "srn",
+              iso: "srn"
+            },
+            {
+              language: "Swahili",
+              code2: "sw",
+              iso: "swa"
+            },
+            {
+              language: "Swedish",
+              code2: "sv",
+              iso: "swe"
+            },
+            {
+              language: "Swiss German",
+              code2: "gsw",
+              iso: "gsw"
+            },
+            {
+              language: "Syriac (Aramaic)",
+              code2: "syr",
+              iso: "syr"
+            },
+            {
+              language: "Tagalog",
+              code2: "tl",
+              iso: "tgl"
+            },
+            {
+              language: "Tajik",
+              code2: "tg",
+              iso: "tgk"
+            },
+            {
+              language: "Tamashek (Tuareg)",
+              code2: "tmh",
+              iso: "tmh"
+            },
+            {
+              language: "Tamil",
+              code2: "ta",
+              iso: "tam"
+            },
+            {
+              language: "Telugu",
+              code2: "te",
+              iso: "tel"
+            },
+            {
+              language: "Tetum",
+              code2: "tet",
+              iso: "tet"
+            },
+            {
+              language: "Thai",
+              code2: "th",
+              iso: "tha"
+            },
+            {
+              language: "Tibetan",
+              code2: "bo",
+              iso: "bod"
+            },
+            {
+              language: "Tigrinya",
+              code2: "ti",
+              iso: "tir"
+            },
+            {
+              language: "Tok Pisin",
+              code2: "tpi",
+              iso: "tpi"
+            },
+            {
+              language: "Tokelauan",
+              code2: "tkl",
+              iso: "tkl"
+            },
+            {
+              language: "Tongan",
+              code2: "to",
+              iso: "ton"
+            },
+            {
+              language: "Tswana",
+              code2: "tn",
+              iso: "tsn"
+            },
+            {
+              language: "Turkish",
+              code2: "tr",
+              iso: "tur"
+            },
+            {
+              language: "Turkmen",
+              code2: "tk",
+              iso: "tuk"
+            },
+            {
+              language: "Tuvaluan",
+              code2: "tvl",
+              iso: "tvl"
+            },
+            {
+              language: "Ukrainian",
+              code2: "uk",
+              iso: "ukr"
+            },
+            {
+              language: "Uma",
+              code2: "ppk",
+              iso: "ppk"
+            },
+            {
+              language: "Uzbek",
+              code2: "uz",
+              iso: "uzb"
+            },
+            {
+              language: "Vietnamese",
+              code2: "vi",
+              iso: "vie"
+            },
+            {
+              language: "Wallisian",
+              code2: "wls",
+              iso: "wls"
+            },
+            {
+              language: "Welsh",
+              code2: "cy",
+              iso: "cym"
+            },
+            {
+              language: "Wolof",
+              code2: "wo",
+              iso: "wol"
+            },
+            {
+              language: "Xhosa",
+              code2: "xh",
+              iso: "xho"
+            },
+            {
+              language: "Yiddish",
+              code2: "yi",
+              iso: "yid"
+            },
+            {
+              language: "Zulu",
+              code2: "zu",
+              iso: "zul"
+            }
+          ]
        }
 
     return language_list;
