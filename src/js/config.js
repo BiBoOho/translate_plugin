@@ -460,7 +460,27 @@ jQuery.noConflict();
         }
       });
 
-      if (!foundDuplicate) { // change to use return
+      if (!foundDuplicate) {
+        //get data from seleced field to check when have the same language
+        let selectedTranFieldBefore = [];
+        let beforeDefaultLanguage = "";
+        $("#table_translate_field tbody tr").each(function (index) {
+          if (index !== 0) {
+            // let selectedTranField = [];
+            $(`#table_translate_field tbody tr:eq(${index})> td select[name='select_field_translate']`).each(function (i) {
+              let selectTranColumnValue = {
+                row: index,
+                language: $(this).attr("value-for-check-field"),
+                field: $(this).val(),
+              };
+              selectedTranFieldBefore.push(selectTranColumnValue);
+            });
+          }
+        });
+
+        if ($("select[name='default_lang'] > option:selected").val() != "-----") {
+          beforeDefaultLanguage = $("select[name='default_lang'] > option:selected").val();          
+        }
         // clone the row without its data
         $("select[name='default_lang'] > option").remove();
         $("#table_translate_field > thead > tr > th:nth-child(n+3)").remove();
@@ -475,13 +495,17 @@ jQuery.noConflict();
 
           if (trValLang !== "-----") {
             $("select[name='default_lang']").append("<option value="+ trValCode + " value-for-check=" + trValLang + ">" + concatenatedOption + "</option>");
+            if (trValCode == beforeDefaultLanguage) {
+              $("select[name='default_lang']").val(trValCode).change();
+              console.log(trValCode);
+            }
             $("#table_translate_field > thead > tr").append(`<th class="kintoneplugin-table-th"><span class="title">${btnLabel}</span></th>`);
             $("#table_translate_field > tbody > tr").append(`<td>
                 <div class="kintoneplugin-table-td-control">
                   <div class="kintoneplugin-table-td-control-value">
                     <div class="kintoneplugin-input-outer">
                       <div class="kintoneplugin-select">
-                        <select name="select_field_translate" class="select_field_translate">
+                        <select name="select_field_translate" value-for-check-field="${trValLang}" class="select_field_translate">
                           <option value="">-----</option>
                         </select>
                       </div>
@@ -492,6 +516,19 @@ jQuery.noConflict();
           }
         }
         await setFieldList();
+        //set value to translate fields table if have language match
+        $("#table_translate_field tbody tr").each(function (index) {
+          let translate_field_row = index + 1;
+        $(`#table_translate_field tbody tr:eq(${translate_field_row})> td select[name='select_field_translate']`).each(function (index, el_translate_select) {
+          for (let j = 0; j < selectedTranFieldBefore.length; j++) {
+            const beforeValue = selectedTranFieldBefore[j].language;
+            if (selectedTranFieldBefore[j].row == translate_field_row && $(el_translate_select).attr("value-for-check-field") == beforeValue) {
+              $(el_translate_select).val(selectedTranFieldBefore[j].field).change();
+            }  
+          }
+          
+        });
+      });
         $("#table_translate_field tbody>tr").append(`<td style="display: flex;" class="kintoneplugin-table-td-operation">
               <button type="button" class="kintoneplugin-button-add-row-image addRowTranslateField" title="Add row"></button>
               <button type="button" class="kintoneplugin-button-remove-row-image removeRowTranslateField" title="Delete this row"></button>
@@ -598,10 +635,24 @@ jQuery.noConflict();
             for (let k = 1; k < space_length; k++) {
               const space_fields = k;
               let emptyValCheck = 2;
+              let sameFieldCheck = [];
+              let sameTypeFieldCheck = [];
               let subTableCheck = false;
               let notSubTableCheck = false;
               for await (const option of $(`#table_translate_field > tbody > tr:eq(${space_fields}) > td select[name='select_field_translate'] option:selected`)) {
                 let selectedFieldVal = $(option).val();
+
+                //check when user selected the same field in row
+                if (sameFieldCheck.includes(selectedFieldVal)) {
+                    Swal10.fire({
+                      icon: "error",
+                      title: "Oops...",
+                      html: `Have the same fields!!`,
+                    });
+                    return;
+                }else{
+                  sameFieldCheck.push(selectedFieldVal);
+                }
 
                 // if have selected field
                 if (selectedFieldVal) {
@@ -619,7 +670,17 @@ jQuery.noConflict();
                     });
                   } else if (selectedFieldVal == checkValname.code) {
                     notSubTableCheck = true;
-                  }
+                    if (!sameTypeFieldCheck.includes(checkValname.type) && sameTypeFieldCheck.length >= 1) {
+                      Swal10.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        html: `Type not match!!`,
+                      });
+                      return;
+                    }else{
+                      sameTypeFieldCheck.push(checkValname.type);
+                    }
+                  } 
                 }
   
                 if (subTableCheck && notSubTableCheck) {
@@ -650,7 +711,7 @@ jQuery.noConflict();
       await kintone.plugin.app.setConfig(config, function () {
         Swal10.fire("Complete", "successfully", "success").then(
           function () {
-            return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+            // return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
           }
         );
       });
