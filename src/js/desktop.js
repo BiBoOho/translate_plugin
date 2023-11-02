@@ -5,7 +5,6 @@ jQuery.noConflict();
   
   kintone.events.on('app.record.index.show', function() {
     var config = kintone.plugin.app.getConfig(PLUGIN_ID);
-    console.log("🚀 ~ file: desktop.js:8 ~ kintone.events.on ~ config:", config);
 
     var spaceElement = kintone.app.getHeaderSpaceElement();
     if (spaceElement === null) {

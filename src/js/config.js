@@ -5,6 +5,7 @@ jQuery.noConflict();
 
   let langList = window.language_pack();
   let confirmButton = $("#save");
+  let cancelButton = $("#cancel");
   let translate_url = $("#tran_url");
   let header_1 = $("#header_1");
   let header_2 = $("#header_2");
@@ -22,8 +23,8 @@ jQuery.noConflict();
   }
   
 
-    // check if the table has only one row, hide remove button
-    const setActionBtnForLangList = () => {
+  // check if the table has only one row, hide remove button
+  const setActionBtnForLangList = () => {
     if ($("#table_language_list tbody > tr").length === 2) {
       $("#table_language_list tbody > tr .removeRowLanguageList").eq(1).hide();
     } else {
@@ -43,7 +44,7 @@ jQuery.noConflict();
   
   $(document).ready(function () {
     //events user chabge angine
-    let currentEngine = '';
+    let currentEngine = $("input[name='engine']:checked").val();
     let previous_engine = $("input[name='engine']:checked").val(); 
     let suporttedLangs = langList.google_tran_api;
     let tran_direction = $("input[name='tran_direction']:checked").val();
@@ -713,15 +714,20 @@ jQuery.noConflict();
       //Confirmed through every check. 
       if (!invalidFieldExisted) {
         let config = setConfig();
-      await kintone.plugin.app.setConfig(config, function () {
-        Swal10.fire("Complete", "successfully", "success").then(
-          function () {
-            return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
-          }
-        );
-      });
-      }
+        await kintone.plugin.app.setConfig(config, function () {
+          Swal10.fire("Complete", "successfully", "success").then(
+            function () {
+              return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+            }
+          );
+        });
+        }
     });
+
+    cancelButton.on("click", async function () {
+      return window.location.href = '../../' + kintone.app.getId() + '/plugin/';
+    });
+
 
     setInitiative();
   });
