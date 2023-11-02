@@ -18,8 +18,7 @@ jQuery.noConflict();
     let param = { app: kintone.app.getId() };
     FIELDS = await kintone.api("/k/v1/preview/form", "GET", param);
   } catch (error) {
-    alert(error);
-    return
+    return Swal10.fire('Error', error.message || error, 'error');
   }
   
 
@@ -150,17 +149,26 @@ jQuery.noConflict();
     
     //set default when not have config value
     async function setInitiative() {
-
           try {
               //create a option to select space for Transacte fields
               const param = { app: kintone.app.getId() };
               const fields = await kintone.api("/k/v1/preview/app/form/layout","GET",param);
               fields.layout.forEach((getSpaceFields) => {
-                getSpaceFields.fields.forEach((getSpaceFieldCode) => {
-                  if (getSpaceFieldCode.type === "SPACER") {
-                    $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(getSpaceFieldCode.elementId, getSpaceFieldCode.elementId));
-                  }
-                });
+                if (getSpaceFields.type === "GROUP") {
+                    getSpaceFields.layout.forEach((groupItem) => {
+                        groupItem.fields.forEach((field) => {
+                          if (field.type === 'SPACER') {
+                            $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(field.elementId, field.elementId));
+                          }
+                        });
+                      });
+                }else {
+                    getSpaceFields.fields.forEach((field) => {
+                      if (field.type === "SPACER") {
+                        $("#table_translate_field tbody tr:eq(0) > td select[name='select_field_space']").append(new Option(field.elementId, field.elementId));
+                      }
+                    });
+                }
               });
 
               //check if have been or not config
@@ -187,7 +195,8 @@ jQuery.noConflict();
                 $(header_3).val(translateEngine.headers[2].header);
             
                 currentEngine = translateEngine.type
-                $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+                // $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).attr("checked", true);
+                $(`input[name='engine'][value='${currentEngine}']`).prop("checked", true);
                 $(`input[name='tran_direction'][value='${CONF.translate_direction}']`).prop("checked", true);
                 tran_direction = CONF.translate_direction;
                 previous_engine = $("input[name='engine']:checked").val();
@@ -226,8 +235,7 @@ jQuery.noConflict();
                 }
               }
           } catch (error) {
-              alert(error);
-              return
+            return Swal10.fire('Error', error.message || error, 'error');
           }
       }
 
@@ -366,7 +374,6 @@ jQuery.noConflict();
            rowIndex = $(this).parents("tr").index() + 1;
           $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='code_iso']`).val("");
           $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='lang_code']`).val("");
-          $(`#table_language_list tbody > tr:nth-child(${rowIndex}) input[name='button_label']`).val("");
         } else {
           let languageList = suporttedLangs.filter(function (index) {
             return index.language === selectedLanguage;
@@ -497,7 +504,6 @@ jQuery.noConflict();
             $("select[name='default_lang']").append("<option value="+ trValCode + " value-for-check=" + trValLang + ">" + concatenatedOption + "</option>");
             if (trValCode == beforeDefaultLanguage) {
               $("select[name='default_lang']").val(trValCode).change();
-              console.log(trValCode);
             }
             $("#table_translate_field > thead > tr").append(`<th class="kintoneplugin-table-th"><span class="title">${btnLabel}</span></th>`);
             $("#table_translate_field > tbody > tr").append(`<td>
@@ -526,7 +532,6 @@ jQuery.noConflict();
               $(el_translate_select).val(selectedTranFieldBefore[j].field).change();
             }  
           }
-          
         });
       });
         $("#table_translate_field tbody>tr").append(`<td style="display: flex;" class="kintoneplugin-table-td-operation">
@@ -586,9 +591,7 @@ jQuery.noConflict();
                 return false;
               }
             });
-        } else if (
-          $("select[name='default_lang'] option").length != languageListRow.length
-        ) {
+        } else if ($("select[name='default_lang'] option").length != languageListRow.length) {
           invalidFieldExisted = true;
           Swal10.fire({
             icon: "error",
@@ -604,7 +607,7 @@ jQuery.noConflict();
           let conditionForCheck = false;
           let ItemValueCheck = [];
           for (let k = 1; k < space_length; k++) {
-            const rowItemValue = $(`#table_translate_field tbody tr:eq(${k})> td input[type="text"]`).val();
+              const rowItemValue = $(`#table_translate_field tbody tr:eq(${k})> td input[type="text"]`).val();
   
               // Do check for null values or have the same value
               if (rowItemValue === "") {
@@ -629,7 +632,7 @@ jQuery.noConflict();
               else{
                 ItemValueCheck.push(rowItemValue);
               }
-        }
+            }
 
           if (!conditionForCheck) {
             for (let k = 1; k < space_length; k++) {
@@ -650,7 +653,7 @@ jQuery.noConflict();
                       html: `Have the same fields!!`,
                     });
                     return;
-                }else{
+                }else if (selectedFieldVal != "") {
                   sameFieldCheck.push(selectedFieldVal);
                 }
 
@@ -670,11 +673,12 @@ jQuery.noConflict();
                     });
                   } else if (selectedFieldVal == checkValname.code) {
                     notSubTableCheck = true;
+                    //Check when selected field is not the same type
                     if (!sameTypeFieldCheck.includes(checkValname.type) && sameTypeFieldCheck.length >= 1) {
                       Swal10.fire({
                         icon: "error",
                         title: "Oops...",
-                        html: `Type not match!!`,
+                        html: `If a ${sameTypeFieldCheck[0]} is selected in any of the other options, it must be a ${sameTypeFieldCheck[0]}.!!`,
                       });
                       return;
                     }else{
@@ -682,7 +686,8 @@ jQuery.noConflict();
                     }
                   } 
                 }
-  
+                
+                // Check when have suptable but other selected field not be a subtable
                 if (subTableCheck && notSubTableCheck) {
                   Swal10.fire({
                     icon: "error",
@@ -711,7 +716,7 @@ jQuery.noConflict();
       await kintone.plugin.app.setConfig(config, function () {
         Swal10.fire("Complete", "successfully", "success").then(
           function () {
-            // return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
+            return window.location.href = '../../flow?app=' + kintone.app.getId() + '#section=settings';
           }
         );
       });
